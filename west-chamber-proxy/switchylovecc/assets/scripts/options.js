@@ -1091,3 +1091,54 @@ function fixProxyString(proxy, defaultPort) {
 	defaultPort = defaultPort || "80";
 	return proxy + ":" + defaultPort;
 }
+
+function startWestChamberProxy() {
+	// npapi start proxy..
+	// if not success, return false.
+    /*
+    var plugins = document.plugins,
+    for (var i = 0, len = plugins.length; i < len; i++) {
+        if (plugins[i].type == "application/x-fbtestplugin-math") {
+            wcproxy = plugins[i];
+        }
+    }*/
+
+    var wcproxy = document.getElementById("wcproxyEmbed");
+    if (!wcproxy) {
+        wcproxy = document.getElementById("testPlugin2");
+    }
+
+    if (!wcproxy.proxy) {
+        return false;
+    }
+
+    var ret = wcproxy.proxy("/home/liruqi/Dropbox/west-chamber-proxy/npapi/westchamberproxy.py");
+    if (ret != 0) {
+        alter("WestChamber start fail. ret=" + ret);
+        return false;
+    }
+
+	var profiles = ProfileManager.getProfiles();
+	
+	profiles["WestChamber"] = {
+		"name":"WestChamber",
+		"proxyMode":"manual",
+		"proxyHttp":"127.0.0.1:1998",
+		"useSameProxy":false,
+		"proxyHttps":"",
+		"proxyFtp":"",
+		"proxySocks":"",
+		"socksVersion":4,
+		"proxyExceptions":"localhost; 127.0.0.1; <local>",
+		"proxyConfigUrl":"",
+		"color":"blue",
+		"id":"WestChamber"};
+	ProfileManager.setProfiles(profiles);
+	return true;
+}
+
+function westChamberProxyLoaded(){
+    console.log("westChamberProxyLoaded")
+    var ret = startWestChamberProxy()
+    console.log("proxy start " + (ret?"ok" : "failed"))
+}

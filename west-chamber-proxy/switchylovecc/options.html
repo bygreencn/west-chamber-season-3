@@ -575,5 +575,12 @@ This work is based on:
 			<p data-i18n-content="options_startupProfile_help">The profile to be applied on extension startup.</p>
 		</div>
 	</div>
+    <div id="pluginContainer2" style="width: 1px; height: 1px; overflow: hidden;">
+        <!--<embed type="application/x-fbtestplugin-math" width="100%" height="100%" id="wcproxyEmbed" onload="console.log('The plugin has loaded!');"> -->
+        <object id="testPlugin2" type="application/x-fbtestplugin-math" width="100%" height="100%" onload="console.log('The plugin has loaded 2!');">
+            <param name="onload" value="westChamberProxyLoaded" />
+        </object>
+        <!-- </embed> -->
+    </div>
 </body>
 </html>

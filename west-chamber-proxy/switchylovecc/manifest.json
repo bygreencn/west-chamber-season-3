@@ -1,5 +1,5 @@
 {
-"update_url":"http://clients2.google.com/service/update2/crx",
+   "update_url":"http://clients2.google.com/service/update2/crx",
    "background_page": "main.html",
    "browser_action": {
       "default_icon": "assets/images/icon-blue.png",
@@ -18,5 +18,9 @@
    "permissions": [ "proxy", "tabs", "<all_urls>" ],
    "version": "2.0.38.0",
    "minimum_chrome_version" : "13.0.0",
-   "homepage_url" : "https://chrome.google.com/webstore/detail/dpplabbmogkhghncfbfdeeokoefdjegm"
+   "homepage_url" : "https://chrome.google.com/webstore/detail/dpplabbmogkhghncfbfdeeokoefdjegm",
+   "plugins": [
+   { "path": "plugin/npFBTestPlugin.so"},
+   { "path": "plugin/FBTestPlugin.plugin"}
+   ]
 }
