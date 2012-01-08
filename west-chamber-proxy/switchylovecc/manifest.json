@@ -20,7 +20,7 @@
    "minimum_chrome_version" : "13.0.0",
    "homepage_url" : "https://chrome.google.com/webstore/detail/dpplabbmogkhghncfbfdeeokoefdjegm",
    "plugins": [
-   { "path": "plugin/npFBTestPlugin.so"},
-   { "path": "plugin/FBTestPlugin.plugin"}
+   { "path": "plugin/npFBTestPlugin.so", "public": true},
+   { "path": "plugin/FBTestPlugin.plugin", "public": true}
    ]
 }

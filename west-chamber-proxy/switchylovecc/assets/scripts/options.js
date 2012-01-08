@@ -31,6 +31,7 @@ var ignoreFieldsChanges = false;
 var selectedRow;
 var selectedRuleRow;
 var switchRulesEnabled;
+var pluginLoadCnt = 0;
 
 function init() {
 	extension = chrome.extension.getBackgroundPage();
@@ -1102,22 +1103,19 @@ function startWestChamberProxy() {
             wcproxy = plugins[i];
         }
     }*/
-
-    var wcproxy = document.getElementById("wcproxyEmbed");
-    if (!wcproxy) {
-        wcproxy = document.getElementById("testPlugin2");
-    }
-
+    /*
+    wcproxy = document.getElementById("testPlugin2");
+    
     if (!wcproxy.proxy) {
         return false;
     }
 
     var ret = wcproxy.proxy("/home/liruqi/Dropbox/west-chamber-proxy/npapi/westchamberproxy.py");
     if (ret != 0) {
-        alter("WestChamber start fail. ret=" + ret);
+        alter("WestChamber auto start fail. ret=" + ret);
         return false;
     }
-
+*/
 	var profiles = ProfileManager.getProfiles();
 	
 	profiles["WestChamber"] = {
@@ -1139,6 +1137,8 @@ function startWestChamberProxy() {
 
 function westChamberProxyLoaded(){
     console.log("westChamberProxyLoaded")
+    pluginLoadCnt += 1
+    if (pluginLoadCnt < 3) return false
     var ret = startWestChamberProxy()
     console.log("proxy start " + (ret?"ok" : "failed"))
 }
