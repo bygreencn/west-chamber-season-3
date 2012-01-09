@@ -3,7 +3,7 @@
       "message": "Proxy Switchy♥CC"
    },
    "manifest_appDescription": {
-      "message": "Manage and switch between multiple proxies quickly & easily. Based on \"Proxy Switchy!\" & \"SwitchyPlus\""
+      "message": "Provide a local HTTP proxy for Mac and Linux, Manage and switch between multiple proxies quickly & easily. Based on \"Proxy SwitchyLoveCC!\""
    },
    "manifest_iconTitle": {
       "message": "[Loading...]"
@@ -48,7 +48,7 @@
       "message": "Are you sure you want to delete selected rule?\n\nSelected Rule: ($1)"
    },
    "message_firstTimeWelcome": {
-      "message": "Welcome first time user!\u003Cbr\u003E\r\nTo start using SwitchySharp set up some proxy profiles below and then press 'Save'."
+      "message": "Welcome first time user!\u003Cbr\u003E\r\nTo start using SwitchyLoveCC set up some proxy profiles below and then press 'Save'."
    },
    "message_optionsSaved": {
       "message": "Options Saved.."
@@ -57,7 +57,7 @@
       "message": "Profile Deleted.."
    },
    "message_restoreOptionsBackup": {
-      "message": "Are you sure you want to restore SwitchySharp options from this backup?\n\nCurrent SwitchySharp options will be overwritten."
+      "message": "Are you sure you want to restore SwitchyLoveCC options from this backup?\n\nCurrent SwitchyLoveCC options will be overwritten."
    },
    "message_ruleDeleted": {
       "message": "Rule Deleted.."
@@ -72,7 +72,7 @@
       "message": "You should set the backup file path first.."
    },
    "message_successRestoreOptionsBackup": {
-      "message": "SwitchySharp options restored successfully."
+      "message": "SwitchyLoveCC options restored successfully."
    },
    "message_apply2All": {
       "message": "Do you want to apply this profile to all rules? \n\n Selected profile: ($1)"
@@ -168,13 +168,13 @@
       "message": "Export Rule List"
    },
    "options_exportRuleList_help": {
-      "message": " Export Switch Rules as a SwitchySharp Rule List file, so you can share it with friends. "
+      "message": " Export Switch Rules as a SwitchyLoveCC Rule List file, so you can share it with friends. "
    },
    "options_ftpProxy": {
       "message": "FTP Proxy"
    },
    "options_headerTitle": {
-      "message": "SwitchySharp Options"
+      "message": "SwitchyLoveCC Options"
    },
    "options_httpProxy": {
       "message": "HTTP Proxy"
@@ -186,7 +186,7 @@
       "message": "Make Backup"
    },
    "options_makeBackup_help": {
-      "message": " Make a full backup of your SwitchySharp options (including proxies, rules and all other options). "
+      "message": " Make a full backup of your SwitchyLoveCC options (including proxies, rules and all other options). "
    },
    "options_manualConfig": {
       "message": "Manual Configuration"
@@ -198,7 +198,7 @@
       "message": "Monitor Proxy Changes"
    },
    "options_monitorProxyChanges_help": {
-      "message": "When proxy settings changes, SwitchySharp will update its icon to reflect those changes."
+      "message": "When proxy settings changes, SwitchyLoveCC will update its icon to reflect those changes."
    },
    "options_moreInfo": {
       "message": "More Info"
@@ -252,10 +252,10 @@
       "message": "Quick Switch"
    },
    "options_quickSwitch_help": {
-      "message": "<p>Allows you to switch among proxy profiles in one click \n(by clicking on SwitchySharp icon).</p><hr />\n<p><b>Note:</b> After enabling this feature you won't be able to see SwitchySharp\nmain menu when clicking on SwitchySharp icon. To open Option page again,\nright-click on the icon and then click \"Options\".</p>"
+      "message": "<p>Allows you to switch among proxy profiles in one click \n(by clicking on SwitchyLoveCC icon).</p><hr />\n<p><b>Note:</b> After enabling this feature you won't be able to see SwitchyLoveCC\nmain menu when clicking on SwitchyLoveCC icon. To open Option page again,\nright-click on the icon and then click \"Options\".</p>"
    },
    "options_quickSwitch_cycle_help": {
-      "message": "When you click on the icon, SwitchySharp will apply the following profiles in their order."
+      "message": "When you click on the icon, SwitchyLoveCC will apply the following profiles in their order."
    },
    "options_cycledProfiles": {
       "message": "Cycled Profiles (drag to sort):"
@@ -273,7 +273,7 @@
       "message": "(Last selected profile)"
    },
    "options_reapplyLastProfile_help": {
-      "message": "If this option is checked SwitchySharp will apply last user-selected proxy profile on Chrome startup."
+      "message": "If this option is checked SwitchyLoveCC will apply last user-selected proxy profile on Chrome startup."
    },
    "options_reloadEvery": {
       "message": "Reload Every"
@@ -291,7 +291,7 @@
       "message": "Restore from File"
    },
    "options_restoreLocal_help": {
-      "message": "Restore your SwitchySharp options from a local file."
+      "message": "Restore your SwitchyLoveCC options from a local file."
    },
    "options_revertProxyChanges": {
       "message": "Revert proxy changes done by other apps."
@@ -369,7 +369,7 @@
       "message": "Proxy for VPN/Dial-up"
    },
    "popup_aboutSwitchy": {
-      "message": "About SwitchySharp"
+      "message": "About SwitchyLoveCC"
    },
    "popup_add": {
       "message": "Add"

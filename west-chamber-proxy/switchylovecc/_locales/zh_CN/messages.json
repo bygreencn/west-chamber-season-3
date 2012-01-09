@@ -3,7 +3,7 @@
       "message": "Proxy Switchy♥CC"
    },
    "manifest_appDescription": {
-      "message": "轻松快捷地管理和切换多个代理设置。基于 \"Proxy Switchy!\" 和 \"SwitchyPlus\" 开发。"
+      "message": "实现本地的防连接重置的代理，轻松快捷地管理和切换多个代理设置。基于 \"Proxy SwitchyLoveCC\"开发。"
    },
    "manifest_iconTitle": {
       "message": "[载入中……]"
@@ -60,7 +60,7 @@
       "message": "情景模式已删除。"
    },
    "message_restoreOptionsBackup": {
-      "message": "确认恢复恢复备份吗？\n\n现有的SwitchySharp配置将会被覆盖。"
+      "message": "确认恢复恢复备份吗？\n\n现有的SwitchyLoveCC配置将会被覆盖。"
    },
    "message_ruleDeleted": {
       "message": "规则已删除。"
@@ -69,7 +69,7 @@
       "message": "规则列表更新成功。"
    },
    "message_rulesFirstTimeWelcome": {
-      "message": "如何使用请查看SwitchySharp项目主页。http://code.google.com/p/switchysharp"
+      "message": "如何使用请查看SwitchyLoveCC项目主页。http://code.google.com/p/switchysharp"
    },
    "message_saveChangedValues": {
       "message": "保存更改?"
@@ -132,7 +132,7 @@
       "message": "删除情景模式或规则时需要确认"
    },
    "options_confirmDeletion_help": {
-      "message": "如果选中此选项，在您要删除情景模式或规则时， SwitchySharp 会询问您是否确定。"
+      "message": "如果选中此选项，在您要删除情景模式或规则时， SwitchyLoveCC 会询问您是否确定。"
    },
    "options_refreshTab": {
       "message": "当更改情景模式时刷新当前标签"
@@ -177,7 +177,7 @@
       "message": "FTP 代理"
    },
    "options_headerTitle": {
-      "message": "SwitchySharp 选项"
+      "message": "SwitchyLoveCC 选项"
    },
    "options_httpProxy": {
       "message": "HTTP 代理"
@@ -204,7 +204,7 @@
       "message": "监控代理变化"
    },
    "options_monitorProxyChanges_help": {
-      "message": "当代理设置变化时， SwitchySharp 会调整图标来反映变化。"
+      "message": "当代理设置变化时， SwitchyLoveCC 会调整图标来反映变化。"
    },
    "options_moreInfo": {
       "message": "更多信息"
@@ -261,10 +261,10 @@
       "message": "快速切换"
    },
    "options_quickSwitch_cycle_help": {
-      "message": "当您点击工具栏图标时, SwitchySharp将按如下顺序切换代理配置。"
+      "message": "当您点击工具栏图标时, SwitchyLoveCC将按如下顺序切换代理配置。"
    },
    "options_quickSwitch_help": {
-      "message": "<p>可以让您一键切换代理配置 \n(点击SwitchyShap图标即可)。</p><hr />\n<p><b>注意:</b> 启用此特性后，您无法通过单击 SwitchySharp 图标弹出配置菜单。你需要右击SwitchySharp图标并选择\"选项\"来进入配置页面。</p>"
+      "message": "<p>可以让您一键切换代理配置 \n(点击SwitchyShap图标即可)。</p><hr />\n<p><b>注意:</b> 启用此特性后，您无法通过单击 SwitchyLoveCC 图标弹出配置菜单。你需要右击SwitchyLoveCC图标并选择\"选项\"来进入配置页面。</p>"
    },
    "options_startupProfile": {
       "message": "启动情景模式："
@@ -276,7 +276,7 @@
       "message": "(上次使用的情景模式)"
    },
    "options_reapplyLastProfile_help": {
-      "message": "如果这个选项被选中 SwitchySharp 启动时将应用用户最后选择的情景模式"
+      "message": "如果这个选项被选中 SwitchyLoveCC 启动时将应用用户最后选择的情景模式"
    },
    "options_reloadEvery": {
       "message": "自动更新间隔"
@@ -297,7 +297,7 @@
       "message": "从文件恢复"
    },
    "options_restoreLocal_help": {
-      "message": "从本地备份文件供恢复SwitchySharp配置。"
+      "message": "从本地备份文件供恢复SwitchyLoveCC配置。"
    },
    "options_revertProxyChanges": {
       "message": "撤消其他扩展对代理的更改。"
@@ -378,7 +378,7 @@
       "message": "VPN/拨号网络的代理"
    },
    "popup_aboutSwitchy": {
-      "message": "关于 SwitchySharp"
+      "message": "关于 SwitchyLoveCC"
    },
    "popup_add": {
       "message": "添加"
