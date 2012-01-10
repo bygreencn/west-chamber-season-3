@@ -1093,26 +1093,43 @@ function fixProxyString(proxy, defaultPort) {
 	return proxy + ":" + defaultPort;
 }
 
+function runProxy() {
+    var plugin = document.getElementById("testPlugin2");
+    var plugin1 = document.getElementById("testPlugin");
+    console.log(plugin.add(1,2));
+    console.log(plugin.proxy(""));
+    try {
+        var path = plugin1.pluginPath;
+        if (path.length < 1) 
+            throw (new Error("path.length < 1"));
+        document.getElementById("notice").innerHTML = "locate plugin ok: " + path + "<br />"
+    } catch (e) {
+        document.getElementById("notice").innerHTML = "locate plugin fail<br />"
+        return false;
+    }
+    path = path.replace("npFBTestPlugin.so", "");
+    path = path.replace("FBTestPlugin.plugin/Contents/MacOS/FBTestPlugin", "");
+    path = '"' + path + '"';
+    cmd = "cd " + path + "; python westchamberproxy.pyc start";
+    document.getElementById("notice").innerHTML += "start proxy: " + cmd + "<br />";
+    ret = plugin.proxy(cmd);
+    if (ret == 0) {
+        document.getElementById("notice").innerHTML += "start proxy ok<br />" +
+            "代理设置成功～请使用自带的WestChamber 代理方式<br />";
+        return true;
+    } else {
+        document.getElementById("notice").innerHTML += ("start proxy fail with code" + ret)
+        return false;
+    }
+}
+
 function startWestChamberProxy() {
 	// npapi start proxy..
 	// if not success, return false.
+    // var view = chrome.extension.getBackgroundPage();
     /*
-    var plugins = document.plugins,
-    for (var i = 0, len = plugins.length; i < len; i++) {
-        if (plugins[i].type == "application/x-fbtestplugin-math") {
-            wcproxy = plugins[i];
-        }
-    }*/
-    /*
-    wcproxy = document.getElementById("testPlugin2");
-    
-    if (!wcproxy.proxy) {
-        return false;
-    }
-
-    var ret = wcproxy.proxy("/home/liruqi/Dropbox/west-chamber-proxy/npapi/westchamberproxy.py");
-    if (ret != 0) {
-        alter("WestChamber auto start fail. ret=" + ret);
+    if (runProxy()) {
+        console.log("proxy start " +  "failed")
         return false;
     }
 */
@@ -1132,6 +1149,7 @@ function startWestChamberProxy() {
 		"color":"blue",
 		"id":"WestChamber"};
 	ProfileManager.setProfiles(profiles);
+    console.log("proxy start " + "ok")
 	return true;
 }
 
@@ -1140,5 +1158,4 @@ function westChamberProxyLoaded(){
     pluginLoadCnt += 1
     if (pluginLoadCnt < 3) return false
     var ret = startWestChamberProxy()
-    console.log("proxy start " + (ret?"ok" : "failed"))
 }
