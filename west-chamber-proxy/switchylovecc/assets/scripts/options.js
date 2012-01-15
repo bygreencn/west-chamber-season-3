@@ -1140,7 +1140,7 @@ function startWestChamberProxy() {
 		"proxyMode":"manual",
 		"proxyHttp":"127.0.0.1:1998",
 		"useSameProxy":false,
-		"proxyHttps":"127.0.0.1:1998",
+		"proxyHttps":"",
 		"proxyFtp":"",
 		"proxySocks":"",
 		"socksVersion":4,
