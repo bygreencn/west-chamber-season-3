@@ -14,7 +14,8 @@ DNS污染
 
 IP封锁
 ------
-由于不依赖与第三方服务器，对于IP封锁也没有优美的解决方案。目前只是通过更新配置文件的方式，尽量避免IP封锁。
+由于不依赖与第三方服务器，对于IP封锁也没有优美的解决方案。目前通过更新配置文件的方式，尽量避免IP封锁。
+现在是通过 Google code 上[SmartHosts项目](code.google.com/p/smarthosts/) 自动获取的[配置文件](http://smarthosts.googlecode.com/svn/trunk/hosts)
 
 可用性
 ------
@@ -26,13 +27,13 @@ IP封锁
 * Window
 
     1. 下载[客户端](https://github.com/downloads/liruqi/west-chamber-season-3/west-chamber-proxy-20111224.zip)，解压缩，双击 exe
-    2. 把浏览器HTTP代理设置为 127.0.0.1:1998。
+    2. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
 
 * Mac / Linux
 
-    1. 提供了[pyc文件下载](https://github.com/downloads/liruqi/west-chamber-season-3/west-chamber-proxy-linux-20111124.zip)，解压缩，终端运行 python xxx.pyc
+    1. 提供了[pyc文件下载](https://github.com/liruqi/west-chamber-season-3/blob/master/west-chamber-proxy/wcproxy.zip)，解压缩，终端运行 python xxx.pyc
     2. 如果加一个额外的数字参数，可以换本地端口。
-    3. 把浏览器HTTP代理设置为 127.0.0.1:1998。
+    3. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
 
 * Android
 
@@ -61,7 +62,6 @@ HTTPS 目前似乎有点问题。
 
 TODO
 ----
-* HTTPS 支持。至少做一个HTTPS下的DNS解析吧。
 * 实现系统HTTP 代理的设置，这样系统自带的浏览器也可以用。
 * 用 Java 重写代理逻辑，用户就不用下载依赖的 python 软件包。
 
@@ -70,3 +70,4 @@ UPDATE LOG
 * 2011-11-23 解决android 客户端的远程 dns 解析的问题。
 * 2011-11-24 对于IP被封锁的站点，走网页代理。
 * 2012-01-08 联通的WLAN热点下失效的问题，联通自己解决了。[ref](http://weibo.com/1641981222/xFx46sR4c)
+* 2012-01-05 HTTPS 支持。至少做一个HTTPS下的DNS解析吧。
