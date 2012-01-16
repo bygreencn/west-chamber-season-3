@@ -37,16 +37,14 @@ IP封锁
 
 * Android
 
-    基于[GAE Proxy](http://code.google.com/p/gaeproxy/)修改的。下载 [apk文件](https://github.com/liruqi/west-chamber-season-3/west-chamber-proxy-20111223.apk/qr_code)。Google Market 也上线了，[地址](https://market.android.com/details?id=org.westchamberproxy)。
+    基于[GAE Proxy](http://code.google.com/p/gaeproxy/)修改的。Google Market 上的[地址](https://market.android.com/details?id=org.westchamberproxy)。
 
 * iOS
     
     目前不打算自己做一个iOS 应用放在 appstore上。因为这需要做成浏览器，我不喜欢做自己不擅长而且重复的事情。iOS 上要使用代理有两个办法。(下载中提供了python27的 pyc，有兴趣的同学完全可以自己尝试。)
 
     1. 局域网内的其它设备(PC, Android 设备)上安装本代理，然后把 iOS 设备的 HTTP 代理设置到该设备上。（或者在国内有服务器的同学，自己搭建HTTP 代理）
-    2. 类似GoAgent 那种iOS客户端的办法。需要越狱。单我本人不喜欢刷机越狱，所以，暂不研究了。
-    
-HTTPS 目前似乎有点问题。
+    2. 类似GoAgent 那种iOS客户端的办法。需要越狱。单我本人没有iOS设备，所以，暂不研究了。
 
 问题反馈
 --------
