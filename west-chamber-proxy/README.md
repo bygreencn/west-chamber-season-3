@@ -24,7 +24,11 @@ IP封锁
 
 使用方法
 --------
-* Window
+* Chrome Extension
+    Mac / Linux 上可以直接使用(需要python 2.7 的环境), Windows 上需要根据提示，另外下载客户端。
+    [下载地址](https://github.com/liruqi/west-chamber-season-3/raw/master/west-chamber-proxy/switchylovecc.crx)
+
+* Windows
 
     1. 下载[客户端](https://github.com/downloads/liruqi/west-chamber-season-3/west-chamber-proxy-20111224.zip)，解压缩，双击 exe
     2. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
