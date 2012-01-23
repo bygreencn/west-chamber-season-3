@@ -1,3 +1,5 @@
+# copied from: http://code.google.com/p/chnroutes/source/browse/trunk/chnroutes.py
+
 import re
 import urllib2
 import sys
@@ -37,7 +39,7 @@ def fetch_ip_data():
         #mask in *nix format
         mask2=32-int(math.log(num_ip,2))
         
-        results.append((starting_ip,mask,mask2))
+        results.append((starting_ip + "/%d")%mask2)
          
     return results
 
