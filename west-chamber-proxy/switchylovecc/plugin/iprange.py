@@ -45,7 +45,7 @@ def fetch_ip_data():
 
 if __name__=='__main__':
     r = fetch_ip_data();
-    s = json.dumps(r);
+    s = json.dumps(r).replace(" ", "");
     print s
 
     open("exclude-ip.json", "w").write(s)
