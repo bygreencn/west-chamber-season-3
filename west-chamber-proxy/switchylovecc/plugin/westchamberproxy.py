@@ -45,8 +45,11 @@ class ProxyHandler(BaseHTTPRequestHandler):
             if host.endswith(d):
                 print host + " in domainWhiteList: " + d
                 return False
+        for c in ip:
+            if c!='.' and (c>'9' or c < '0'):
+                print "recursive ip "+ip
+                return True
 
-        print "ip rules: %d" % len(gipWhiteList)
         for r in gipWhiteList:
             ran,m2 = r.split("/");
             dip = struct.unpack('!I', socket.inet_aton(ip))[0]
