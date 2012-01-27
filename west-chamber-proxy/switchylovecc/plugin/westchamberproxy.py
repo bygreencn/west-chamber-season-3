@@ -10,7 +10,7 @@
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 from httplib import HTTPResponse
-import re, socket, struct, threading, os, traceback, sys, select, urlparse, signal, urllib, json
+import re, socket, struct, threading, os, traceback, sys, select, urlparse, signal, urllib, json, platform
 
 grules = []
 PROXY_SERVER = "http://opliruqi.appspot.com/"
@@ -32,7 +32,8 @@ domainWhiteList = [
     "weibo.com",
     "youku.com",
     "tudou.com",
-    "ft.net"
+    "ft.net",
+    "ge.net"
     ]
 
 class ThreadingHTTPServer(ThreadingMixIn, HTTPServer): pass
@@ -220,36 +221,38 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 break
 
 
-def start():
+def start(fork):
     # do the UNIX double-fork magic, see Stevens' "Advanced   
-    # Programming in the UNIX Environment" for details (ISBN 0201563177)  
-    try:   
-        pid = os.fork()   
-        if pid > 0:  
-            # exit first parent  
-            sys.exit(0)   
-    except OSError, e:   
-        print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)   
-        sys.exit(1)  
-    # decouple from parent environment  
-    os.chdir("/")   
-    os.setsid()   
-    os.umask(0)   
-    # do second fork  
-    try:   
-        pid = os.fork()   
-        if pid > 0:
-            sys.exit(0)   
-    except OSError, e:   
-        print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)   
-        sys.exit(1)
+    # Programming in the UNIX Environment" for details (ISBN 0201563177)
+    
+    if fork:
+        try:   
+            pid = os.fork()   
+            if pid > 0:  
+                # exit first parent  
+                sys.exit(0)   
+        except OSError, e:   
+            print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)   
+            sys.exit(1)  
+        # decouple from parent environment  
+        os.chdir("/")   
+        os.setsid()   
+        os.umask(0)   
+        # do second fork  
+        try:   
+            pid = os.fork()   
+            if pid > 0:
+                sys.exit(0)   
+        except OSError, e:   
+            print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)   
+            sys.exit(1)
 
-    pid = str(os.getpid())
-    print "start pid %s"%pid
-    f = open(PID_FILE,'a')
-    f.write(" ")
-    f.write(pid)
-    f.close()
+        pid = str(os.getpid())
+        print "start pid %s"%pid
+        f = open(PID_FILE,'a')
+        f.write(" ")
+        f.write(pid)
+        f.close()
     
     # Read Configuration
     try:
@@ -290,16 +293,23 @@ def start():
     except KeyboardInterrupt: exit()
     
 if __name__ == "__main__":
+    isWindows = (platform.system() == "Windows")
     if (len(sys.argv)<2 or sys.argv[1] == "start"):
         # 
         # http://stackoverflow.com/questions/82831/how-do-i-check-if-a-file-exists-using-python
-        try:
-            open(PID_FILE).close()
-            print "pid exists: " + open(PID_FILE).read()
-        except IOError as e:
-            start()
-        exit(0)
+        if not isWindows:
+            try:
+                open(PID_FILE).close()
+                print "pid exists: " + open(PID_FILE).read()
+                exit(0)
+            except IOError as e:
+                print "start new process..."
+        start( (False == isWindows) )
+        
     if (sys.argv[1] == "stop"):
+        if isWindows:
+            print "process control is not supported on Windows"
+            exit(2)
         try:
             pid = open(PID_FILE).read()
             os.remove(PID_FILE)
