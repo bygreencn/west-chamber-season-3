@@ -1,4 +1,7 @@
 '''
+    westchamberproxy by liruqi AT gmail.com
+    Last update: 2012/01/27
+    Based on:
     PyGProxy helps you access Google resources quickly!!!
     Go through the G.F.W....
     gdxxhg AT gmail.com 110602
@@ -253,7 +256,7 @@ def start():
         s = urllib.urlopen('http://liruqi.sinaapp.com/mirror.php?u=aHR0cDovL3NtYXJ0aG9zdHMuZ29vZ2xlY29kZS5jb20vc3ZuL3RydW5rL2hvc3Rz')
         for line in s.readlines():
             line = line.strip()
-            if line[:1] == "#": continue
+            line = line.split("#")[0]
             d = line.split()
             if (len(d) != 2): continue
             #remove long domains, and redirect by proxy for short domains
