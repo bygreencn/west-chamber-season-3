@@ -108,6 +108,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
             return host
         return host
     def proxy(self):
+        doInject = False
         try:
             print self.requestline
             self.supportCrLfPrefix = True
@@ -119,10 +120,11 @@ class ProxyHandler(BaseHTTPRequestHandler):
             # Remove http://[host]
             path = self.path[self.path.find(host) + len(host):]
             connectHost = self.getip(host)
+            doInject = self.enableInjection(host, connectHost)
             if self.remote is None or self.lastHost != self.headers["Host"]:
                 self.remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.remote.connect((connectHost, port))
-                if self.enableInjection(host, connectHost): 
+                if doInject: 
                     self.remote.send("\r\n\r\n")
             self.lastHost = self.headers["Host"]
             while True:
@@ -168,17 +170,22 @@ class ProxyHandler(BaseHTTPRequestHandler):
             elif (netloc == urlparse.urlparse(PROXY_SERVER)[1]):
                 self.wfile.write("HTTP/1.1 500 Server Error, Cannot connect to proxy " + "\r\n")
             else:
-                status = "HTTP/1.1 302 Found"
-                self.wfile.write(status + "\r\n")
-                self.wfile.write("Location: " + PROXY_SERVER + self.path[7:] + "\r\n")
-            
+                if doInject:
+                    status = "HTTP/1.1 302 Found"
+                    self.wfile.write(status + "\r\n")
+                    self.wfile.write("Location: " + PROXY_SERVER + self.path[7:] + "\r\n")
+                else:
+                    print ("Not redirect " + self.path)
+                    self.wfile.write("HTTP/1.1 500 Server Error Unkown Error\r\n")
             self.connection.close()
     
     def do_GET(self):
-        socket.setdefaulttimeout(18)
+        #some sites(e,g, weibo.com) are using comet (persistent HTTP connection) to implement server push
+        #after setting socket timeout, many persistent HTTP requests redirects to web proxy, waste of resource
+        #socket.setdefaulttimeout(18)
         self.proxy()
     def do_POST(self):
-        socket.setdefaulttimeout(None)
+        #socket.setdefaulttimeout(None)
         self.proxy()
 
     def do_CONNECT(self):
