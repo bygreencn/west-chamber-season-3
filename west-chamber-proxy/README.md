@@ -30,12 +30,12 @@ IP封锁
 
 * Windows
 
-    1. 下载[客户端](https://github.com/downloads/liruqi/west-chamber-season-3/west-chamber-proxy-20111224.zip)，解压缩，双击 exe
+    1. 下载[客户端](https://github.com/downloads/liruqi/west-chamber-season-3/west-chamber-proxy-20120112.zip)，解压缩，双击 exe
     2. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
 
 * Mac / Linux
 
-    1. 提供了[pyc文件下载](https://github.com/liruqi/west-chamber-season-3/blob/master/west-chamber-proxy/wcproxy.zip)，解压缩，终端运行 python xxx.pyc
+    1. 提供了[py文件下载](https://github.com/liruqi/west-chamber-season-3/blob/master/west-chamber-proxy/wcproxy.zip)，解压缩，终端运行 python xxx.py
     2. 如果加一个额外的数字参数，可以换本地端口。
     3. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
 
@@ -45,7 +45,7 @@ IP封锁
 
 * iOS
     
-    目前不打算自己做一个iOS 应用放在 appstore上。因为这需要做成浏览器，我不喜欢做自己不擅长而且重复的事情。iOS 上要使用代理有两个办法。(下载中提供了python27的 pyc，有兴趣的同学完全可以自己尝试。)
+    目前不打算自己做一个iOS 应用放在 appstore上。因为这需要做成浏览器，我不喜欢做自己不擅长而且重复的事情。iOS 上要使用代理有两个办法。(下载中提供了python27的 py 源代码，有兴趣的同学完全可以自己尝试。)
 
     1. 局域网内的其它设备(PC, Android 设备)上安装本代理，然后把 iOS 设备的 HTTP 代理设置到该设备上。（或者在国内有服务器的同学，自己搭建HTTP 代理）
     2. 类似GoAgent 那种iOS客户端的办法。需要越狱。单我本人没有iOS设备，所以，暂不研究了。
@@ -57,10 +57,6 @@ IP封锁
 软件更新
 -------
 日常会有配置文件更新。如果有程序的更新，会在下载页面中给出。
-
-源代码
-------
-实际上我已经发布。需要的同学大概自己就能找到。但是找到的同学就别公开帮方老师做源码分析了。
 
 TODO
 ----
