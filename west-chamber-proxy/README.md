@@ -24,10 +24,6 @@ IP封锁
 
 使用方法
 --------
-* Chrome Extension
-    Mac / Linux 上可以直接使用(需要python 2.7 的环境), Windows 上需要根据提示，另外下载客户端。
-    [下载地址](https://github.com/liruqi/west-chamber-season-3/raw/master/west-chamber-proxy/switchylovecc.crx)
-
 * Windows
 
     1. 下载[客户端](https://github.com/downloads/liruqi/west-chamber-season-3/west-chamber-proxy-20120112.zip)，解压缩，双击 exe
@@ -49,6 +45,9 @@ IP封锁
 
     1. 局域网内的其它设备(PC, Android 设备)上安装本代理，然后把 iOS 设备的 HTTP 代理设置到该设备上。（或者在国内有服务器的同学，自己搭建HTTP 代理）
     2. 类似GoAgent 那种iOS客户端的办法。需要越狱。单我本人没有iOS设备，所以，暂不研究了。
+
+* Chrome Extension
+    安装[SwitchySharp](https://chrome.google.com/webstore/detail/dpplabbmogkhghncfbfdeeokoefdjegm) 插件，然后导入这个设置 https://github.com/liruqi/west-chamber-season-3/blob/master/west-chamber-proxy/chrome/SwitchyOptions.bak
 
 问题反馈
 --------
