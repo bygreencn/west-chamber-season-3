@@ -47,6 +47,7 @@ IP封锁
     2. 类似GoAgent 那种iOS客户端的办法。需要越狱。单我本人没有iOS设备，所以，暂不研究了。
 
 * Chrome Extension
+
     安装[SwitchySharp](https://chrome.google.com/webstore/detail/dpplabbmogkhghncfbfdeeokoefdjegm) 插件，然后导入这个设置 https://github.com/liruqi/west-chamber-season-3/blob/master/west-chamber-proxy/chrome/SwitchyOptions.bak
 
 问题反馈
