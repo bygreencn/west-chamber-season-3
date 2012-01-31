@@ -25,7 +25,7 @@ IP封锁
 --------
 * Windows
 
-    1. 下载[客户端](https://github.com/downloads/liruqi/west-chamber-season-3/west-chamber-proxy-20120112.zip)，解压缩，双击 exe
+    1. 下载[客户端](https://github.com/downloads/liruqi/west-chamber-season-3/west-chamber-proxy-20120131.zip)，解压缩，双击 exe
     2. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
 
 * Mac / Linux
