@@ -1,4 +1,0 @@
-/* Localized versions of Info.plist keys */
-
-CFBundleName = "FBTestPlugin.plugin";
-NSHumanReadableCopyright = "Copyright 2009 Firebreath Dev Team";

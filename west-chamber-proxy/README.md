@@ -15,12 +15,11 @@ DNS污染
 IP封锁
 ------
 由于不依赖与第三方服务器，对于IP封锁也没有优美的解决方案。目前通过更新配置文件的方式，尽量避免IP封锁。
-现在是通过 Google code 上[SmartHosts项目](code.google.com/p/smarthosts/) 自动获取的[配置文件](http://smarthosts.googlecode.com/svn/trunk/hosts)
+现在是通过 Google code 上[SmartHosts项目](http://code.google.com/p/smarthosts/) 自动获取的[配置文件](http://smarthosts.googlecode.com/svn/trunk/hosts)
 
 可用性
 ------
-如果国外网站IP被封锁，使用本工具也无法访问。
-另外，Android 客户端似乎设置了 https 代理，访问需要登陆的网站也有问题。
+如果国外网站IP被封锁，使用本工具可能无法访问。
 
 使用方法
 --------
@@ -70,4 +69,5 @@ UPDATE LOG
 * 2012-01-08 联通的WLAN热点下失效的问题，联通自己解决了。[ref](http://weibo.com/1641981222/xFx46sR4c)
 * 2012-01-05 HTTPS 支持。
 * 2012-01-28 Windows 平台支持；国内站点 Comet 连接，停止重定向到网页代理。
+* 2012-01-31 停止维护chrome extension, 而是类似于goagent，直接提供代理程序，以及 SwitchySharp 备份。
 
