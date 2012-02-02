@@ -59,6 +59,7 @@ IP封锁
 
 TODO
 ----
+* [ALL] merge accelerates from [ccp0101/dnschina](https://github.com/ccp0101/dnschina)
 * [Android] 实现系统HTTP 代理的设置，这样系统自带的浏览器也可以用。
 * [Android] 用 Java 重写代理逻辑，用户就不用下载依赖的 python 软件包。
 

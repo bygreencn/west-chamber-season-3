@@ -64,15 +64,21 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 return False
         return True
 
+    def isIp(self, host):
+        return re.match(r'^([0-9]+\.){3}[0-9]+$', host) != None
+
     def getip(self, host):
+        if self.isIp(host):
+            return host
+
         for r in grules:
             if r[1].match(host) is not None:
                 print ("Rule resolve: " + host + " => " + r[0])
                 return r[0]
-        if re.match(r'^([0-9]+\.){3}[0-9]+$', host) is None:
-            try:
-                ip = socket.gethostbyname(host)
-                fakeIp = {
+
+        try:
+            ip = socket.gethostbyname(host)
+            fakeIp = {
                 0x5d2e0859 : 1,
                 0xcb620741 : 1,
                 0x0807c62d : 1,
@@ -84,29 +90,31 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 0x253d369e : 1,
                 0x9f1803ad : 1,
                 0x3b1803ad : 1,
-                }
-                packedIp = socket.inet_aton(ip)
-                print struct.unpack('!I', packedIp)
-                if struct.unpack('!I', packedIp)[0] in fakeIp:
-                    print ("Fake IP " + host + " => " + ip)
-                else:
-                    print ("DNS system resolve: " + host + " => " + ip)
-                    return ip
-            except:
-                ip = ""
+            }
+            packedIp = socket.inet_aton(ip)
+            if struct.unpack('!I', packedIp)[0] in fakeIp:
+                print ("Fake IP " + host + " => " + ip)
+            else:
+                print ("DNS system resolve: " + host + " => " + ip)
+                return ip
+        except:
+            print "DNS system resolve Error"
+            ip = ""
             
-            import DNS
-            reqObj = DNS.Request()
-            response = reqObj.req(name=host, qtype="A", protocol="tcp", server="168.95.1.1")
-            #print response.answers
-            #response.show()
-            for a in response.answers:
-                if a["name"] == host:
-                    print ("DNS remote resolve: " + host + " => " + a["data"])
-                    return a["data"]
-            print ("DNS resolve failed: " + host)
-            return host
+        import DNS
+        reqObj = DNS.Request()
+        response = reqObj.req(name=host, qtype="A", protocol="tcp", server="168.95.1.1")
+        #response.show()
+        for a in response.answers:
+            if a["name"] == host:
+                print ("DNS remote resolve: " + host + " => " + a["data"])
+                if a['typename'] == 'CNAME':
+                    return self.getip(a["data"])
+                return a["data"]
+
+        print ("DNS resolve failed: " + host)
         return host
+
     def proxy(self):
         doInject = False
         try:
@@ -127,6 +135,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 if doInject: 
                     self.remote.send("\r\n\r\n")
             self.lastHost = self.headers["Host"]
+
             while True:
                 # Send requestline
                 self.remote.send(" ".join((self.command, path, self.request_version)) + "\r\n")
