@@ -27,6 +27,7 @@ domainWhiteList = [
     "mozilla.com",
     "wp.com",
     "qstatic.com",
+    "serve.com",
     "qq.com",
     "soso.com",
     "weibo.com",
@@ -278,8 +279,8 @@ def start(fork):
             line = line.split("#")[0]
             d = line.split()
             if (len(d) != 2): continue
-            #remove long domains, and redirect by proxy for short domains
-            if len(d[1]) > 24 or len(d[1])<6:
+            #remove long domains
+            if len(d[1]) > 24:
                 print "ignore "+d[1]
                 continue
             print "read "+line
