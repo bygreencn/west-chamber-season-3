@@ -273,7 +273,7 @@ def start(fork):
     
     # Read Configuration
     try:
-        s = urllib.urlopen('http://liruqi.sinaapp.com/mirror.php?u=aHR0cDovL3NtYXJ0aG9zdHMuZ29vZ2xlY29kZS5jb20vc3ZuL3RydW5rL2hvc3Rz')
+        s = urllib.urlopen('http://liruqi.sinaapp.com/mirror.php?u=aHR0cDovL3NtYXJ0aG9zdHMuZ29vZ2xlY29kZS5jb20vc3ZuL3RydW5rL2hvc3Rz', proxies={})
         for line in s.readlines():
             line = line.strip()
             line = line.split("#")[0]
@@ -293,7 +293,7 @@ def start(fork):
     
     try:
         global gipWhiteList;
-        s = urllib.urlopen('http://liruqi.sinaapp.com/exclude-ip.json')
+        s = urllib.urlopen('http://liruqi.sinaapp.com/exclude-ip.json', proxies={})
         gipWhiteList = json.loads( s.read() )
         print "load %d ip range rules" % len(gipWhiteList);
         s.close()
