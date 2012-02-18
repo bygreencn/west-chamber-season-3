@@ -30,9 +30,8 @@ IP封锁
 
 * Mac / Linux
 
-    1. 提供了[py文件下载](https://github.com/liruqi/west-chamber-season-3/blob/master/west-chamber-proxy/wcproxy.zip)，解压缩，终端运行 python xxx.py
-    2. 如果加一个额外的数字参数，可以换本地端口。
-    3. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
+    1. 打开终端，git clone git://github.com/liruqi/west-chamber-season; cd west-chamber-season-3/west-chamber-proxy; python westchamberproxy.py
+    2. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
 
 * Android
 
