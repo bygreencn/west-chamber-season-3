@@ -30,7 +30,7 @@ IP封锁
 
 * Mac / Linux
 
-    1. 打开终端，git clone git://github.com/liruqi/west-chamber-season; cd west-chamber-season-3/west-chamber-proxy; python westchamberproxy.py
+    1. 打开终端，git clone git://github.com/liruqi/west-chamber-season-3.git; cd west-chamber-season-3/west-chamber-proxy; python westchamberproxy.py
     2. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
 
 * Android
