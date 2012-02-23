@@ -76,7 +76,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
             if r[1].match(host) is not None:
                 print ("Rule resolve: " + host + " => " + r[0])
                 return r[0]
-
+        print "Resolving " + host
         try:
             ip = socket.gethostbyname(host)
             fakeIp = {
@@ -92,28 +92,45 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 0x9f1803ad : 1,
                 0x3b1803ad : 1,
             }
+            ChinaUnicom404 = {
+                "202.106.199.37" : 1,
+                "202.106.195.30" : 1,
+            }
             packedIp = socket.inet_aton(ip)
             if struct.unpack('!I', packedIp)[0] in fakeIp:
                 print ("Fake IP " + host + " => " + ip)
+            elif ip in ChinaUnicom404:
+                print ("ChinaUnicom404 " + host + " => " + ip + ", ignore");
             else:
                 print ("DNS system resolve: " + host + " => " + ip)
                 return ip
         except:
-            print "DNS system resolve Error"
+            print "DNS system resolve Error: " + host
             ip = ""
-            
+        return self.getRemoteResolve(host, "168.95.1.1");
+
+    def getRemoteResolve(self, host, dnsserver):
+        print "remote resolve " + host + " by " + dnsserver
         import DNS
         reqObj = DNS.Request()
-        response = reqObj.req(name=host, qtype="A", protocol="tcp", server="168.95.1.1")
+        response = reqObj.req(name=host, qtype="A", protocol="tcp", server=dnsserver)
         #response.show()
+        print "answers: " + str(response.answers)
         for a in response.answers:
             if a["name"] == host:
                 print ("DNS remote resolve: " + host + " => " + a["data"])
                 if a['typename'] == 'CNAME':
                     return self.getip(a["data"])
                 return a["data"]
-
-        print ("DNS resolve failed: " + host)
+        print "authority: "+ str(response.authority)
+        for a in response.authority:
+            if a['typename'] != "NS":
+                continue
+            if type(a['data']) == type((1,2)):
+                return self.getRemoteResolve(host, a['data'][0])
+            else :
+                return self.getRemoteResolve(host, a['data'])
+        print ("DNS remote resolve failed: " + host)
         return host
 
     def proxy(self):
