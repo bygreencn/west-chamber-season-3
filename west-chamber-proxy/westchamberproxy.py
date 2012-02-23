@@ -13,7 +13,13 @@ from httplib import HTTPResponse
 import re, socket, struct, threading, os, traceback, sys, select, urlparse, signal, urllib, json, platform
 
 grules = []
-PROXY_SERVER = "http://opliruqi.appspot.com/"
+
+gConfig = {
+"PROXY_SERVER" : "http://opliruqi.appspot.com/",
+"REMOTE_DNS" : "168.95.1.1",
+"SKIP_LOCAL_RESOLV" : True,
+}
+
 PID_FILE = '/tmp/python.pid'
 gipWhiteList = []
 domainWhiteList = [
@@ -77,6 +83,10 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 print ("Rule resolve: " + host + " => " + r[0])
                 return r[0]
         print "Resolving " + host
+        
+        if gConfig["SKIP_LOCAL_RESOLV"]:
+            return self.getRemoteResolve(host, gConfig["REMOTE_DNS"])
+
         try:
             ip = socket.gethostbyname(host)
             fakeIp = {
@@ -107,7 +117,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
         except:
             print "DNS system resolve Error: " + host
             ip = ""
-        return self.getRemoteResolve(host, "168.95.1.1");
+        return self.getRemoteResolve(host, gConfig["REMOTE_DNS"])
 
     def getRemoteResolve(self, host, dnsserver):
         print "remote resolve " + host + " by " + dnsserver
@@ -194,13 +204,13 @@ class ProxyHandler(BaseHTTPRequestHandler):
             (scm, netloc, path, params, query, _) = urlparse.urlparse(self.path)
             if (scm.upper() != "HTTP"):
                 self.wfile.write("HTTP/1.1 500 Server Error " + scm.upper() + "\r\n")
-            elif (netloc == urlparse.urlparse(PROXY_SERVER)[1]):
+            elif (netloc == urlparse.urlparse( gConfig["PROXY_SERVER"] )[1]):
                 self.wfile.write("HTTP/1.1 500 Server Error, Cannot connect to proxy " + "\r\n")
             else:
                 if doInject:
                     status = "HTTP/1.1 302 Found"
                     self.wfile.write(status + "\r\n")
-                    self.wfile.write("Location: " + PROXY_SERVER + self.path[7:] + "\r\n")
+                    self.wfile.write("Location: " + gConfig["PROXY_SERVER"] + self.path[7:] + "\r\n")
                 else:
                     print ("Not redirect " + self.path)
                     self.wfile.write("HTTP/1.1 500 Server Error Unkown Error\r\n")
