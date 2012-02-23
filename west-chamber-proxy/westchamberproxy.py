@@ -125,7 +125,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
         reqObj = DNS.Request()
         response = reqObj.req(name=host, qtype="A", protocol="tcp", server=dnsserver)
         #response.show()
-        print "answers: " + str(response.answers)
+        #print "answers: " + str(response.answers)
         for a in response.answers:
             if a["name"] == host:
                 print ("DNS remote resolve: " + host + " => " + a["data"])
