@@ -25,12 +25,14 @@ IP封锁
 --------
 * Windows
 
-    1. 下载[客户端](https://github.com/downloads/liruqi/west-chamber-season-3/west-chamber-proxy-20120131.zip)，解压缩，双击 exe
-    2. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
+    1. 建议的使用方法：先下载 python 2.7，(32位)[http://python.org/ftp/python/2.7.2/python-2.7.2.msi] / (64位)[http://python.org/ftp/python/2.7.2/python-2.7.2.amd64.msi] ，然后下载[代码](https://github.com/liruqi/west-chamber-season-3/zipball/master)，解压缩，进入 west-chamber-proxy 文件夹，双击 westchamberproxy.py。
+    2. 上面的方法可以使用最新版的代码。如果觉得麻烦，或者发现新版不好用，也可以直接下载[客户端](https://github.com/downloads/liruqi/west-chamber-season-3/west-chamber-proxy-20120131.zip)，解压缩，双击 exe
+    3. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
 
 * Mac / Linux
 
-    1. 打开终端，git clone git://github.com/liruqi/west-chamber-season-3.git; cd west-chamber-season-3/west-chamber-proxy; python westchamberproxy.py
+    1. 下载项目代码: [zip](https://github.com/liruqi/west-chamber-season-3/zipball/master)
+    1. 解压缩，打开终端，cd 到代码目录，cd west-chamber-proxy; python westchamberproxy.py
     2. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
 
 * Android
@@ -39,7 +41,7 @@ IP封锁
 
 * iOS
     
-    目前不打算自己做一个iOS 应用放在 appstore上。因为这需要做成浏览器，我不喜欢做自己不擅长而且重复的事情。iOS 上要使用代理有两个办法。(下载中提供了python27的 py 源代码，有兴趣的同学完全可以自己尝试。)
+    目前不打算自己做一个iOS 应用放在 appstore上。因为这需要做成浏览器，我不喜欢做自己不擅长而且重复的事情。iOS 上要使用代理有两个办法。
 
     1. 局域网内的其它设备(PC, Android 设备)上安装本代理，然后把 iOS 设备的 HTTP 代理设置到该设备上。（或者在国内有服务器的同学，自己搭建HTTP 代理）
     2. 类似GoAgent 那种iOS客户端的办法。需要越狱。单我本人没有iOS设备，所以，暂不研究了。
