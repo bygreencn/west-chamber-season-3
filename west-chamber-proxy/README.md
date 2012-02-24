@@ -6,7 +6,7 @@
 开发者
 ------
 * [XIAOXIA](http://xiaoxia.org), 原始版本作者
-* [LIRUQI](http://liruqi.info), 各平台的打包、发布
+* [LIRUQI](http://liruqi.info), 后续开发, 各平台的打包、发布
 
 DNS污染
 -------
@@ -72,4 +72,5 @@ UPDATE LOG
 * 2012-01-05 HTTPS 支持。
 * 2012-01-28 Windows 平台支持；国内站点 Comet 连接，停止重定向到网页代理。
 * 2012-01-31 停止维护chrome extension, 而是类似于goagent，直接提供代理程序，以及 SwitchySharp 备份。
+* 2012-02-24 修复Google plus 链接重定向错误 (plus.url.google.com => plus.url.google.com.hk)
 

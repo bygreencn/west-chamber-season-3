@@ -15,9 +15,12 @@ import re, socket, struct, threading, os, traceback, sys, select, urlparse, sign
 grules = []
 
 gConfig = {
-"PROXY_SERVER" : "http://opliruqi.appspot.com/",
-"REMOTE_DNS" : "168.95.1.1",
-"SKIP_LOCAL_RESOLV" : True,
+    "PROXY_SERVER" : "http://opliruqi.appspot.com/",
+    "REMOTE_DNS" : "168.95.1.1",
+    "SKIP_LOCAL_RESOLV" : True,
+    "REDIRECT_DOMAINS": {
+        "plus.url.google.com":"url"
+    }
 }
 
 PID_FILE = '/tmp/python.pid'
@@ -153,6 +156,20 @@ class ProxyHandler(BaseHTTPRequestHandler):
             if host.find(":") != -1:
                 port = int(host.split(":")[1])
                 host = host.split(":")[0]
+
+            if host in gConfig["REDIRECT_DOMAINS"]:
+                prefix = gConfig["REDIRECT_DOMAINS"][host] + "="
+                (scm, netloc, path, params, query, _) = urlparse.urlparse(self.path)
+                for param in query.split('&') :
+                    if param.find(prefix) == 0:
+                        #redirect 
+                        status = "HTTP/1.1 302 Found"
+                        self.wfile.write(status + "\r\n")
+                        print "redirect to " + urllib.unquote(param[len(prefix):])
+                        self.wfile.write("Location: " + urllib.unquote(param[len(prefix):]) + "\r\n")
+                        self.connection.close()
+                        return
+
             # Remove http://[host]
             path = self.path[self.path.find(host) + len(host):]
             connectHost = self.getip(host)
@@ -202,6 +219,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
             print exc_value
             traceback.print_tb(exc_traceback)
             (scm, netloc, path, params, query, _) = urlparse.urlparse(self.path)
+                
             if (scm.upper() != "HTTP"):
                 self.wfile.write("HTTP/1.1 500 Server Error " + scm.upper() + "\r\n")
             elif (netloc == urlparse.urlparse( gConfig["PROXY_SERVER"] )[1]):
