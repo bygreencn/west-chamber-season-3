@@ -38,6 +38,7 @@ domainWhiteList = [
     "qstatic.com",
     "serve.com",
     "qq.com",
+    "qqmail.com",
     "soso.com",
     "weibo.com",
     "youku.com",
@@ -174,14 +175,15 @@ class ProxyHandler(BaseHTTPRequestHandler):
             path = self.path[self.path.find(host) + len(host):]
             connectHost = self.getip(host)
             doInject = self.enableInjection(host, connectHost)
-            if self.remote is None or self.lastHost != self.headers["Host"]:
-                self.remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.remote.connect((connectHost, port))
-                if doInject: 
-                    self.remote.send("\r\n\r\n")
+            
             self.lastHost = self.headers["Host"]
 
             while True:
+                if self.remote is None or self.lastHost != self.headers["Host"]:
+                    self.remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.remote.connect((connectHost, port))
+                    if doInject: 
+                        self.remote.send("\r\n\r\n")
                 # Send requestline
                 self.remote.send(" ".join((self.command, path, self.request_version)) + "\r\n")
                 # Send headers
@@ -194,6 +196,15 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 if response.status == 400 and self.supportCrLfPrefix == True:
                     while response.read(8192): pass
                     self.supportCrLfPrefix = False
+                    continue
+                if doInject and response.status == 405:
+                    #not inject and try again
+                    print host + "405, try not inject"
+                    self.remote.close()
+                    self.remote = None
+                    domainWhiteList.append(host)
+                    #TODO: send this host to server for collection
+                    self.proxy()
                     continue
                 break
             # Reply to the browser
