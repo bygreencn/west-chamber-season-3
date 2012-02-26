@@ -10,7 +10,7 @@
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 from httplib import HTTPResponse
-import re, socket, struct, threading, os, traceback, sys, select, urlparse, signal, urllib, json, platform
+import re, socket, struct, threading, os, traceback, sys, select, urlparse, signal, urllib, urllib2, json, platform
 import config
 
 grules = []
@@ -198,6 +198,8 @@ class ProxyHandler(BaseHTTPRequestHandler):
                     self.remote = None
                     domainWhiteList.append(host)
                     #TODO: send this host to server for collection
+                    if "FEEDBACK_LOG_SERVER" in gConfig:
+                        urllib2.urlopen(gConfig["FEEDBACK_LOG_SERVER"] + "code405/host/" + host).close()
                     continue
                 break
             # Reply to the browser
@@ -219,8 +221,12 @@ class ProxyHandler(BaseHTTPRequestHandler):
 
             exc_type, exc_value, exc_traceback = sys.exc_info()
             print "error in proxy: ", self.requestline
-            print exc_type
-            print exc_value
+            print str(exc_value) + " " + host
+            if "FEEDBACK_LOG_SERVER" in gConfig:
+                code, msg = str(exc_value).split('] ')
+                code = code[1:].replace(" ", "")
+                url = gConfig["FEEDBACK_LOG_SERVER"] + code + "/host/" + host + "/?msg=" + urllib.quote(msg)
+                urllib2.urlopen(url).close()
             traceback.print_tb(exc_traceback)
             (scm, netloc, path, params, query, _) = urlparse.urlparse(self.path)
                 
@@ -322,7 +328,7 @@ def start(fork):
     
     # Read Configuration
     try:
-        s = urllib.urlopen('http://liruqi.sinaapp.com/mirror.php?u=aHR0cDovL3NtYXJ0aG9zdHMuZ29vZ2xlY29kZS5jb20vc3ZuL3RydW5rL2hvc3Rz', proxies={})
+        s = urllib2.urlopen('http://liruqi.sinaapp.com/mirror.php?u=aHR0cDovL3NtYXJ0aG9zdHMuZ29vZ2xlY29kZS5jb20vc3ZuL3RydW5rL2hvc3Rz')
         for line in s.readlines():
             line = line.strip()
             line = line.split("#")[0]
@@ -342,7 +348,7 @@ def start(fork):
     
     try:
         global gipWhiteList;
-        s = urllib.urlopen('http://liruqi.sinaapp.com/exclude-ip.json', proxies={})
+        s = urllib2.urlopen('http://liruqi.sinaapp.com/exclude-ip.json')
         gipWhiteList = json.loads( s.read() )
         print "load %d ip range rules" % len(gipWhiteList);
         s.close()
