@@ -20,6 +20,9 @@ IP封锁
 可用性
 ------
 如果国外网站IP被封锁，使用本工具可能无法访问。
+另外，已知的不可用站点列表：
+* baidu.jp
+* nicovideo.jp (tw.nicovideo.jp 可以打开网页，无法看视频)
 
 使用方法
 --------
@@ -52,7 +55,7 @@ IP封锁
 
 问题反馈
 --------
-在[这里](https://github.com/liruqi/west-chamber-season-3/issues) 直接提供不能访问的网站。
+在[这里](https://github.com/liruqi/west-chamber-season-3/issues) 反馈各种问题。 
 
 软件更新
 -------

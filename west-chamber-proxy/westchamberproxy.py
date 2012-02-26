@@ -11,17 +11,11 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 from httplib import HTTPResponse
 import re, socket, struct, threading, os, traceback, sys, select, urlparse, signal, urllib, json, platform
+import config
 
 grules = []
 
-gConfig = {
-    "PROXY_SERVER" : "http://opliruqi.appspot.com/",
-    "REMOTE_DNS" : "168.95.1.1",
-    "SKIP_LOCAL_RESOLV" : True,
-    "REDIRECT_DOMAINS": {
-        "plus.url.google.com":"url"
-    }
-}
+gConfig = config.gConfig
 
 PID_FILE = '/tmp/python.pid'
 gipWhiteList = []
@@ -174,11 +168,11 @@ class ProxyHandler(BaseHTTPRequestHandler):
             # Remove http://[host]
             path = self.path[self.path.find(host) + len(host):]
             connectHost = self.getip(host)
-            doInject = self.enableInjection(host, connectHost)
             
             self.lastHost = self.headers["Host"]
 
             while True:
+                doInject = self.enableInjection(host, connectHost)
                 if self.remote is None or self.lastHost != self.headers["Host"]:
                     self.remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     self.remote.connect((connectHost, port))
@@ -204,7 +198,6 @@ class ProxyHandler(BaseHTTPRequestHandler):
                     self.remote = None
                     domainWhiteList.append(host)
                     #TODO: send this host to server for collection
-                    self.proxy()
                     continue
                 break
             # Reply to the browser
