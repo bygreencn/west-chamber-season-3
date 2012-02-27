@@ -152,21 +152,33 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 port = int(host.split(":")[1])
                 host = host.split(":")[0]
 
-            if host in gConfig["REDIRECT_DOMAINS"]:
-                prefix = gConfig["REDIRECT_DOMAINS"][host] + "="
-                (scm, netloc, path, params, query, _) = urlparse.urlparse(self.path)
-                for param in query.split('&') :
-                    if param.find(prefix) == 0:
-                        #redirect 
-                        status = "HTTP/1.1 302 Found"
-                        self.wfile.write(status + "\r\n")
-                        print "redirect to " + urllib.unquote(param[len(prefix):])
-                        self.wfile.write("Location: " + urllib.unquote(param[len(prefix):]) + "\r\n")
-                        self.connection.close()
-                        return
+            redirectUrl = self.path
+            while True:
+                (scm, netloc, path, params, query, _) = urlparse.urlparse(redirectUrl)
 
+                if (netloc not in gConfig["REDIRECT_DOMAINS"]):
+                    break
+                prefixes = gConfig["REDIRECT_DOMAINS"][netloc].split('|')
+                found = False
+                for prefix in prefixes:
+                    prefix = prefix + "="
+                    for param in query.split('&') :
+                        if param.find(prefix) == 0:
+                            print "redirect to " + urllib.unquote(param[len(prefix):])
+                            redirectUrl = urllib.unquote(param[len(prefix):])
+                            found = True
+                            continue 
+                if not found:
+                    break
+            #redirect 
+            if (redirectUrl != self.path):
+                status = "HTTP/1.1 302 Found"
+                self.wfile.write(status + "\r\n")
+                self.wfile.write("Location: " + redirectUrl + "\r\n")
+                self.connection.close()
+                return
             # Remove http://[host]
-            path = self.path[self.path.find(host) + len(host):]
+            # path = self.path[self.path.find(host) + len(host):]
             connectHost = self.getip(host)
             
             self.lastHost = self.headers["Host"]
@@ -175,6 +187,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 doInject = self.enableInjection(host, connectHost)
                 if self.remote is None or self.lastHost != self.headers["Host"]:
                     self.remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    print "connect to " + host + ":" + str(port)
                     self.remote.connect((connectHost, port))
                     if doInject: 
                         self.remote.send("\r\n\r\n")
@@ -221,11 +234,13 @@ class ProxyHandler(BaseHTTPRequestHandler):
 
             exc_type, exc_value, exc_traceback = sys.exc_info()
             print "error in proxy: ", self.requestline
+            print exc_type
             print str(exc_value) + " " + host
-            if "FEEDBACK_LOG_SERVER" in gConfig:
+            if exc_type == socket.error and "FEEDBACK_LOG_SERVER" in gConfig:
                 code, msg = str(exc_value).split('] ')
                 code = code[1:].replace(" ", "")
                 url = gConfig["FEEDBACK_LOG_SERVER"] + code + "/host/" + host + "/?msg=" + urllib.quote(msg)
+                print "FEEDBACK_LOG: " + url
                 urllib2.urlopen(url).close()
             traceback.print_tb(exc_traceback)
             (scm, netloc, path, params, query, _) = urlparse.urlparse(self.path)
