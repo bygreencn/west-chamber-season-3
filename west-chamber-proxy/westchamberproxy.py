@@ -371,11 +371,8 @@ def start(fork):
         print "load ip-range config fail"
 
     print "Loaded", len(grules), " dns rules."
-    localPort = 1998
-    #if (len(sys.argv) > 1):
-    #    localPort = int(sys.argv[1])
-    print "Set your browser's HTTP proxy to 127.0.0.1:%d"%(localPort)
-    server = ThreadingHTTPServer(("0.0.0.0", localPort), ProxyHandler)
+    print "Set your browser's HTTP proxy to 127.0.0.1:%d"%(gConfig["LOCAL_PORT"])
+    server = ThreadingHTTPServer(("0.0.0.0", gConfig["LOCAL_PORT"]), ProxyHandler)
     try: server.serve_forever()
     except KeyboardInterrupt: exit()
     
