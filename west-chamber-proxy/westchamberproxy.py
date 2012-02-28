@@ -178,7 +178,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 self.connection.close()
                 return
             # Remove http://[host]
-            # path = self.path[self.path.find(host) + len(host):]
+            path = self.path[self.path.find(netloc) + len(netloc):]
             connectHost = self.getip(host)
             
             self.lastHost = self.headers["Host"]
