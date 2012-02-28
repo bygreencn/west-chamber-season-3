@@ -2,6 +2,7 @@
 --------
 * 不需要服务器的本地翻墙代理工具。
 * [项目维护地址](https://github.com/liruqi/west-chamber-season-3/tree/master/west-chamber-proxy)
+* [Follow up](https://plus.google.com/b/108661470402896863593/)
 
 开发者
 ------
@@ -31,9 +32,9 @@ IP封锁
 --------
 * Windows
 
-    1. 建议的使用方法：先下载 python 2.7，[32位](http://python.org/ftp/python/2.7.2/python-2.7.2.msi) / [64位](http://python.org/ftp/python/2.7.2/python-2.7.2.amd64.msi) ，然后下载[代码](https://github.com/liruqi/west-chamber-season-3/zipball/master)，解压缩，进入 west-chamber-proxy 文件夹，双击 westchamberproxy.py。
-    2. 上面的方法可以使用最新版的代码。如果觉得麻烦，或者发现新版不好用，也可以直接下载[客户端](https://github.com/downloads/liruqi/west-chamber-season-3/westchamberproxy-20120226.zip)，解压缩，双击 exe
-    3. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
+    1. 下载[客户端](https://github.com/downloads/liruqi/west-chamber-season-3/westchamberproxy-20120226.zip)，解压缩，双击 exe
+    2. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
+    3. Windows 版本更新比较慢。如果希望使用最新代码，先下载 python 2.7，[32位](http://python.org/ftp/python/2.7.2/python-2.7.2.msi) / [64位](http://python.org/ftp/python/2.7.2/python-2.7.2.amd64.msi) ，然后下载[代码](https://github.com/liruqi/west-chamber-season-3/zipball/master)，解压缩，进入 west-chamber-proxy 文件夹，双击 westchamberproxy.py。
 
 * Mac / Linux
 
