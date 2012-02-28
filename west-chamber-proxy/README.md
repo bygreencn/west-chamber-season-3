@@ -4,30 +4,6 @@
 * [项目维护地址](https://github.com/liruqi/west-chamber-season-3/tree/master/west-chamber-proxy)
 * [Follow up](https://plus.google.com/b/108661470402896863593/)
 
-开发者
-------
-* [XIAOXIA](http://xiaoxia.org), 原始版本作者
-* [LIRUQI](http://liruqi.info), 后续开发, 各平台的打包、发布
-
-DNS污染
--------
-有实现用户态反DNS污染。而且独立于系统的DNS配置。
-
-IP封锁
-------
-由于不依赖与第三方服务器，对于IP封锁也没有优美的解决方案。目前通过更新配置文件的方式，尽量避免IP封锁。
-现在是通过 Google code 上[SmartHosts项目](http://code.google.com/p/smarthosts/) 自动获取的[配置文件](http://smarthosts.googlecode.com/svn/trunk/hosts)
-
-可用性
-------
-1. 如果国外网站IP被封锁，使用本工具可能无法访问。
-2. 如果国外网站被关键词过滤，且没有严格遵守 [rfc2616 - section 4.1](http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html)，本工具也不能生效（如baidu.jp）。
-
-已知的不可用站点列表：
-
-* baidu.jp
-* nicovideo.jp (tw.nicovideo.jp 可以打开网页，无法看视频)
-
 使用方法
 --------
 * Windows
@@ -56,6 +32,30 @@ IP封锁
 * Chrome Extension
 
     安装[SwitchySharp](https://chrome.google.com/webstore/detail/dpplabbmogkhghncfbfdeeokoefdjegm) 插件，然后导入这个设置 https://github.com/liruqi/west-chamber-season-3/raw/master/west-chamber-proxy/chrome/SwitchyOptions.bak
+
+开发者
+------
+* [XIAOXIA](http://xiaoxia.org), 原始版本作者
+* [LIRUQI](http://liruqi.info), 后续开发, 各平台的打包、发布
+
+DNS污染
+-------
+有实现用户态反DNS污染。而且独立于系统的DNS配置。
+
+IP封锁
+------
+由于不依赖与第三方服务器，对于IP封锁也没有优美的解决方案。目前通过更新配置文件的方式，尽量避免IP封锁。
+现在是通过 Google code 上[SmartHosts项目](http://code.google.com/p/smarthosts/) 自动获取的[配置文件](http://smarthosts.googlecode.com/svn/trunk/hosts)
+
+可用性
+------
+1. 如果国外网站IP被封锁，使用本工具可能无法访问。
+2. 如果国外网站被关键词过滤，且没有严格遵守 [rfc2616 - section 4.1](http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html)，本工具也不能生效（如baidu.jp）。
+
+已知的不可用站点列表：
+
+* baidu.jp
+* nicovideo.jp (tw.nicovideo.jp 可以打开网页，无法看视频)
 
 问题反馈
 --------
