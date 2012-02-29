@@ -256,18 +256,16 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 path = code + "/host/" + host + "/?msg=" + urllib.quote(msg)
             traceback.print_tb(exc_traceback)
             (scm, netloc, path, params, query, _) = urlparse.urlparse(self.path)
-            if doInject:
-                status = "HTTP/1.1 302 Found"
+            status = "HTTP/1.1 302 Found"
+            if (netloc != urlparse.urlparse( gConfig["PROXY_SERVER"] )[1]):
                 self.wfile.write(status + "\r\n")
                 self.wfile.write("Location: " + gConfig["PROXY_SERVER"] + self.path[7:] + "\r\n")
             else:
                 status = "HTTP/1.1 302 Found"
                 if (scm.upper() != "HTTP"):
                     msg = "schme-not-supported"
-                elif (netloc == urlparse.urlparse( gConfig["PROXY_SERVER"] )[1]):
-                    msg = "web-proxy-fail"
                 else:
-                    msg = "unkown"
+                    msg = "web-proxy-fail"
                 path = ("error/host/" + host + "/?msg=" + msg)
                 self.wfile.write(status + "\r\n")
                 self.wfile.write("Location: http://liruqi.info/post/18486575704/west-chamber-proxy#" + msg + "\r\n")
