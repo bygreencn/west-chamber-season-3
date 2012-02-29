@@ -153,7 +153,6 @@ class ProxyHandler(BaseHTTPRequestHandler):
         doInject = False
         try:
             print self.requestline
-            self.supportCrLfPrefix = True
             port = 80
             host = self.headers["Host"]
             if host.find(":") != -1:
@@ -211,21 +210,17 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 msg = "http405"
                 try :
                     response.begin()
+                    print host + " response: %d"%(response.status)
                 except BadStatusLine:
+                    print host + " response: BadStatusLine"
                     msg = "badStatusLine"
                     badStatusLine = True
 
-                if response.status == 400 and self.supportCrLfPrefix == True:
-                    while response.read(8192): pass
-                    self.supportCrLfPrefix = False
-                    continue
-                if doInject and (response.status == 405 or badStatusLine):
-                    #not inject and try again
-                    print host + " 405, try not inject"
+                if doInject and (response.status == 400 or response.status == 405 or badStatusLine):
                     self.remote.close()
                     self.remote = None
                     domainWhiteList.append(host)
-                    self.netlog("code405/host/" + host + "?msg=" + msg)
+                    self.netlog("code%d/host/"%(response.status) + host + "?msg=" + msg)
                     continue
                 break
             # Reply to the browser
