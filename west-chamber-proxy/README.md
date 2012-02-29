@@ -80,4 +80,6 @@ UPDATE LOG
 * 2012-01-28 Windows 平台支持；国内站点 Comet 连接，停止重定向到网页代理。
 * 2012-01-31 停止维护chrome extension, 而是类似于goagent，直接提供代理程序，以及 SwitchySharp 备份。
 * 2012-02-24 修复Google plus 链接重定向错误 (plus.url.google.com => plus.url.google.com.hk)
+* 2012-02-29 修复不支持 GET path 中不带域名信息的服务器(例如www.swaneye.com)
+
 

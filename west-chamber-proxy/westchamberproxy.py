@@ -9,7 +9,7 @@
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
-from httplib import HTTPResponse
+from httplib import HTTPResponse, BadStatusLine
 import re, socket, struct, threading, os, traceback, sys, select, urlparse, signal, urllib, urllib2, json, platform
 import config
 
@@ -140,7 +140,15 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 return self.getRemoteResolve(host, a['data'])
         print ("DNS remote resolve failed: " + host)
         return host
-
+    
+    def netlog(self, path):
+        print "FEEDBACK_LOG: " + path
+        if "FEEDBACK_LOG_SERVER" in gConfig:
+            try:
+                urllib2.urlopen(gConfig["FEEDBACK_LOG_SERVER"] + path).close()
+            except:
+                pass
+        
     def proxy(self):
         doInject = False
         try:
@@ -192,27 +200,32 @@ class ProxyHandler(BaseHTTPRequestHandler):
                     if doInject: 
                         self.remote.send("\r\n\r\n")
                 # Send requestline
-                self.remote.send(" ".join((self.command, path, self.request_version)) + "\r\n")
+                self.remote.send(" ".join((self.command, (doInject and [path] or [self.path])[0], self.request_version)) + "\r\n")
                 # Send headers
                 self.remote.send(str(self.headers) + "\r\n")
                 # Send Post data
                 if(self.command=='POST'):
                     self.remote.send(self.rfile.read(int(self.headers['Content-Length'])))
                 response = HTTPResponse(self.remote, method=self.command)
-                response.begin()
+                badStatusLine = False
+                msg = "http405"
+                try :
+                    response.begin()
+                except BadStatusLine:
+                    msg = "badStatusLine"
+                    badStatusLine = True
+
                 if response.status == 400 and self.supportCrLfPrefix == True:
                     while response.read(8192): pass
                     self.supportCrLfPrefix = False
                     continue
-                if doInject and response.status == 405:
+                if doInject and (response.status == 405 or badStatusLine):
                     #not inject and try again
-                    print host + "405, try not inject"
+                    print host + " 405, try not inject"
                     self.remote.close()
                     self.remote = None
                     domainWhiteList.append(host)
-                    #TODO: send this host to server for collection
-                    if "FEEDBACK_LOG_SERVER" in gConfig:
-                        urllib2.urlopen(gConfig["FEEDBACK_LOG_SERVER"] + "code405/host/" + host).close()
+                    self.netlog("code405/host/" + host + "?msg=" + msg)
                     continue
                 break
             # Reply to the browser
@@ -239,9 +252,8 @@ class ProxyHandler(BaseHTTPRequestHandler):
             if exc_type == socket.error and "FEEDBACK_LOG_SERVER" in gConfig:
                 code, msg = str(exc_value).split('] ')
                 code = code[1:].replace(" ", "")
-                url = gConfig["FEEDBACK_LOG_SERVER"] + code + "/host/" + host + "/?msg=" + urllib.quote(msg)
-                print "FEEDBACK_LOG: " + url
-                urllib2.urlopen(url).close()
+                path = code + "/host/" + host + "/?msg=" + urllib.quote(msg)
+                self.netlog(path)
             traceback.print_tb(exc_traceback)
             (scm, netloc, path, params, query, _) = urlparse.urlparse(self.path)
                 
