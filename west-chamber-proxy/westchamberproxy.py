@@ -249,26 +249,30 @@ class ProxyHandler(BaseHTTPRequestHandler):
             print "error in proxy: ", self.requestline
             print exc_type
             print str(exc_value) + " " + host
-            if exc_type == socket.error and "FEEDBACK_LOG_SERVER" in gConfig:
+            path = ""
+            if exc_type == socket.error:
                 code, msg = str(exc_value).split('] ')
                 code = code[1:].replace(" ", "")
                 path = code + "/host/" + host + "/?msg=" + urllib.quote(msg)
-                self.netlog(path)
             traceback.print_tb(exc_traceback)
             (scm, netloc, path, params, query, _) = urlparse.urlparse(self.path)
-                
-            if (scm.upper() != "HTTP"):
-                self.wfile.write("HTTP/1.1 500 Server Error " + scm.upper() + "\r\n")
-            elif (netloc == urlparse.urlparse( gConfig["PROXY_SERVER"] )[1]):
-                self.wfile.write("HTTP/1.1 500 Server Error, Cannot connect to proxy " + "\r\n")
+            if doInject:
+                status = "HTTP/1.1 302 Found"
+                self.wfile.write(status + "\r\n")
+                self.wfile.write("Location: " + gConfig["PROXY_SERVER"] + self.path[7:] + "\r\n")
             else:
-                if doInject:
-                    status = "HTTP/1.1 302 Found"
-                    self.wfile.write(status + "\r\n")
-                    self.wfile.write("Location: " + gConfig["PROXY_SERVER"] + self.path[7:] + "\r\n")
+                status = "HTTP/1.1 302 Found"
+                if (scm.upper() != "HTTP"):
+                    msg = "schme-not-supported"
+                elif (netloc == urlparse.urlparse( gConfig["PROXY_SERVER"] )[1]):
+                    msg = "web-proxy-fail"
                 else:
-                    print ("Not redirect " + self.path)
-                    self.wfile.write("HTTP/1.1 500 Server Error Unkown Error\r\n")
+                    msg = "unkown"
+                path = ("error/host/" + host + "/?msg=" + msg)
+                self.wfile.write(status + "\r\n")
+                self.wfile.write("Location: http://liruqi.info/post/18486575704/west-chamber-proxy#" + msg + "\r\n")
+
+            self.netlog(path)
             self.connection.close()
     
     def do_GET(self):
