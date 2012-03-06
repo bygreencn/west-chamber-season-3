@@ -211,6 +211,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 try :
                     response.begin()
                     print host + " response: %d"%(response.status)
+                    msg = "http%d"%(response.status)
                 except BadStatusLine:
                     print host + " response: BadStatusLine"
                     msg = "badStatusLine"
@@ -220,7 +221,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
                     self.remote.close()
                     self.remote = None
                     domainWhiteList.append(host)
-                    self.netlog("code%d/host/"%(response.status) + host + "?msg=" + msg)
+                    self.netlog(msg + "/host/" + host)
                     continue
                 break
             # Reply to the browser
