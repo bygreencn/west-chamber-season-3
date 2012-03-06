@@ -8,7 +8,7 @@
 --------
 * Windows
 
-    1. 下载[客户端](https://github.com/downloads/liruqi/west-chamber-season-3/westchamberproxy-20120131.zip)，解压缩，双击 exe
+    1. 下载[客户端](https://github.com/downloads/liruqi/west-chamber-season-3/west-chamber-proxy-20120131.zip)，解压缩，双击 exe
     2. 把浏览器HTTP/HTTPS 代理设置为 127.0.0.1:1998。
     3. Windows 版本更新比较慢。如果希望使用最新代码，先下载 python 2.7，[32位](http://python.org/ftp/python/2.7.2/python-2.7.2.msi) / [64位](http://python.org/ftp/python/2.7.2/python-2.7.2.amd64.msi) ，然后下载[代码](https://github.com/liruqi/west-chamber-season-3/zipball/master)，解压缩，进入 west-chamber-proxy 文件夹，双击 westchamberproxy.py。
 
