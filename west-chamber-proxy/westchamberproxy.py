@@ -151,14 +151,14 @@ class ProxyHandler(BaseHTTPRequestHandler):
         
     def proxy(self):
         doInject = False
-        try:
-            print self.requestline
-            port = 80
-            host = self.headers["Host"]
-            if host.find(":") != -1:
-                port = int(host.split(":")[1])
-                host = host.split(":")[0]
+        print self.requestline
+        port = 80
+        host = self.headers["Host"]
+        if host.find(":") != -1:
+            port = int(host.split(":")[1])
+            host = host.split(":")[0]
 
+        try:
             redirectUrl = self.path
             while True:
                 (scm, netloc, path, params, query, _) = urlparse.urlparse(redirectUrl)
@@ -255,7 +255,10 @@ class ProxyHandler(BaseHTTPRequestHandler):
             status = "HTTP/1.1 302 Found"
             if (netloc != urlparse.urlparse( gConfig["PROXY_SERVER"] )[1]):
                 self.wfile.write(status + "\r\n")
-                self.wfile.write("Location: " + gConfig["PROXY_SERVER"] + self.path[7:] + "\r\n")
+                redirectUrl = gConfig["PROXY_SERVER"] + self.path[7:]
+                if (host in gConfig["HSTS_DOMAINS"]):
+                    redirectUrl = "https://" + self.path[7:]
+                self.wfile.write("Location: " + redirectUrl + "\r\n")
             else:
                 status = "HTTP/1.1 302 Found"
                 if (scm.upper() != "HTTP"):
