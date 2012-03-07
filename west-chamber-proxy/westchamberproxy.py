@@ -203,7 +203,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
                     if doInject: 
                         self.remote.send("\r\n\r\n")
                 # Send requestline
-                self.remote.send(" ".join((self.command, (doInject and [path] or [self.path])[0], self.request_version)) + "\r\n")
+                self.remote.send(" ".join((self.command, path, self.request_version)) + "\r\n")
                 # Send headers
                 self.remote.send(str(self.headers) + "\r\n")
                 # Send Post data

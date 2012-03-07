@@ -49,6 +49,7 @@ gConfig = {
         "facebook.com": 1,
         "www.facebook.com": 1,
         "apps.facebook.com": 1,
+        "graph.facebook.com": 1,
         "www.youtube.com": 1,
         "twitter.com": 1,
         "api.twitter.com": 1,
