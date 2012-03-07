@@ -260,6 +260,9 @@ class ProxyHandler(BaseHTTPRequestHandler):
             if (netloc != urlparse.urlparse( gConfig["PROXY_SERVER"] )[1]):
                 self.wfile.write(status + "\r\n")
                 redirectUrl = gConfig["PROXY_SERVER"] + self.path[7:]
+                if host in gConfig["HSTS_ON_EXCEPTION_DOMAINS"]:
+                    redirectUrl = "https://" + self.path[7:]
+
                 self.wfile.write("Location: " + redirectUrl + "\r\n")
             else:
                 status = "HTTP/1.1 302 Found"

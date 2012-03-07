@@ -30,5 +30,18 @@ gConfig = {
         "romab.com" : 1,
         "logentries.com" : 1,
         "stripe.com" : 1,
+    },
+    #collect domains that support HTTPS, to reduce usage of web proxy
+    "HSTS_ON_EXCEPTION_DOMAINS" : {
+        "s.ytimg.com": 1,
+        "i3.ytimg.com": 1,
+        "i4.ytimg.com": 1,
+        "bits.wikimedia.org": 1,
+        "www.wikipedia.org": 1,
+        "www.google-analytics.com": 1,
+        "www.google-analytics.com": 1,
+        "facebook.com": 1,
+        "www.facebook.com": 1,
+        "apps.facebook.com": 1,
     }
 }
