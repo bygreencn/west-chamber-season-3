@@ -39,7 +39,7 @@ domainWhiteList = [
     "tudou.com",
     "ft.net",
     "ge.net",
-    "www.phonenumber.com"
+    "phonenumber.com"
     ]
 
 class ThreadingHTTPServer(ThreadingMixIn, HTTPServer): pass
@@ -149,6 +149,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 urllib2.urlopen(gConfig["FEEDBACK_LOG_SERVER"] + path).close()
             except:
                 pass
+        print "end FEEDBACK_LOG" 
         
     def proxy(self):
         doInject = False
@@ -158,6 +159,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
         if host.find(":") != -1:
             port = int(host.split(":")[1])
             host = host.split(":")[0]
+        errpath = ""
 
         try:
             redirectUrl = self.path
@@ -221,12 +223,14 @@ class ProxyHandler(BaseHTTPRequestHandler):
                     print host + " response: BadStatusLine"
                     msg = "badStatusLine"
                     badStatusLine = True
+                except:
+                    raise
 
                 if doInject and (response.status == 400 or response.status == 405 or badStatusLine):
                     self.remote.close()
                     self.remote = None
                     domainWhiteList.append(host)
-                    self.netlog(msg + "/host/" + host)
+                    errpath = (msg + "/host/" + host)
                     continue
                 break
             # Reply to the browser
@@ -250,11 +254,11 @@ class ProxyHandler(BaseHTTPRequestHandler):
             print "error in proxy: ", self.requestline
             print exc_type
             print str(exc_value) + " " + host
-            path = ""
+            errpath = "unkown/host" + host + "/?msg=" + urllib.quote(msg)
             if exc_type == socket.error:
                 code, msg = str(exc_value).split('] ')
                 code = code[1:].replace(" ", "")
-                path = code + "/host/" + host + "/?msg=" + urllib.quote(msg)
+                errpath = code + "/host/" + host + "/?msg=" + urllib.quote(msg)
             traceback.print_tb(exc_traceback)
             (scm, netloc, path, params, query, _) = urlparse.urlparse(self.path)
             status = "HTTP/1.1 302 Found"
@@ -271,12 +275,14 @@ class ProxyHandler(BaseHTTPRequestHandler):
                     msg = "schme-not-supported"
                 else:
                     msg = "web-proxy-fail"
-                path = ("error/host/" + host + "/?msg=" + msg)
+                errpath = ("error/host/" + host + "/?msg=" + msg)
                 self.wfile.write(status + "\r\n")
                 self.wfile.write("Location: http://liruqi.info/post/18486575704/west-chamber-proxy#" + msg + "\r\n")
-
-            self.netlog(path)
             self.connection.close()
+            print "client connection closed"
+
+        if errpath != "":
+            self.netlog(errpath)
     
     def do_GET(self):
         #some sites(e,g, weibo.com) are using comet (persistent HTTP connection) to implement server push
