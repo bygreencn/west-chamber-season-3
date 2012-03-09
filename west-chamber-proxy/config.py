@@ -6,7 +6,8 @@ gConfig = {
         "plus.url.google.com":"url",
         "plus.url.google.com.hk":"q|url"
     },
-    "FEEDBACK_LOG_SERVER" : "http://wcproxy.liruqi.info/",
+    #feed back slow down proxy, if you intend to improve this proxy, uncomment following line
+    #"FEEDBACK_LOG_SERVER" : "http://wcproxy.liruqi.info/",
     "LOCAL_PORT" : 1998,
     "HSTS_DOMAINS" : {
         "developers.facebook.com": 1,
