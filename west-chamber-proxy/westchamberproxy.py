@@ -10,7 +10,7 @@
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 from httplib import HTTPResponse, BadStatusLine
-import re, socket, struct, threading, os, traceback, sys, select, urlparse, signal, urllib, urllib2, json, platform
+import re, socket, struct, threading, os, traceback, sys, select, urlparse, signal, urllib, urllib2, json, platform, time
 import config
 
 grules = []
@@ -45,6 +45,9 @@ domainWhiteList = [
 class ThreadingHTTPServer(ThreadingMixIn, HTTPServer): pass
 class ProxyHandler(BaseHTTPRequestHandler):
     remote = None
+    dnsCache = {}
+    now = 0
+
     def enableInjection(self, host, ip):
         global gipWhiteList;
         print "check "+host + " " + ip
@@ -81,8 +84,14 @@ class ProxyHandler(BaseHTTPRequestHandler):
             if r[1].match(host) is not None:
                 print ("Rule resolve: " + host + " => " + r[0])
                 return r[0]
+
         print "Resolving " + host
-        
+        self.now = int( time.time() )
+        if host in self.dnsCache:
+            if self.now < self.dnsCache[host]["expire"]:
+                print "Cache: " + host + " => " + self.dnsCache[host]["ip"] + " / expire in %d (s)" %(self.dnsCache[host]["expire"] - self.now)
+                return self.dnsCache[host]["ip"]
+
         if gConfig["SKIP_LOCAL_RESOLV"]:
             return self.getRemoteResolve(host, gConfig["REMOTE_DNS"])
 
@@ -127,9 +136,10 @@ class ProxyHandler(BaseHTTPRequestHandler):
         #print "answers: " + str(response.answers)
         for a in response.answers:
             if a["name"] == host:
-                print ("DNS remote resolve: " + host + " => " + a["data"])
+                print ("DNS remote resolve: " + host + " => " + str(a))
                 if a['typename'] == 'CNAME':
                     return self.getip(a["data"])
+                self.dnsCache[host] = {"ip":a["data"], "expire":self.now + a["ttl"]}
                 return a["data"]
         print "authority: "+ str(response.authority)
         for a in response.authority:
