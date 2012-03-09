@@ -254,7 +254,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
             print "error in proxy: ", self.requestline
             print exc_type
             print str(exc_value) + " " + host
-            errpath = "unkown/host" + host + "/?msg=" + urllib.quote(msg)
+            errpath = "unkown/host" + host 
             if exc_type == socket.error:
                 code, msg = str(exc_value).split('] ')
                 code = code[1:].replace(" ", "")
