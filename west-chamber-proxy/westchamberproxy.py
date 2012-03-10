@@ -1,6 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 '''
     westchamberproxy by liruqi AT gmail.com
-    Last update: 2012/01/27
     Based on:
     PyGProxy helps you access Google resources quickly!!!
     Go through the G.F.W....
