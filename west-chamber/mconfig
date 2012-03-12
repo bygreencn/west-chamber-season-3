@@ -1,5 +1,0 @@
-# -*- Makefile -*-
-#
-build_CUI=m
-build_ZHANG=m
-build_gfw=m
