@@ -18,6 +18,7 @@ import config
 grules = []
 gBlockedDomains = {
     "baidu.jp" : True,
+    "search.twitter.com" : True,
     "www.baidu.jp" : True,
     "www.nicovideo.jp": True,
     "ext.nicovideo.jp": True,
