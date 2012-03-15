@@ -1,5 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 gConfig = {
     "PROXY_SERVER" : "http://opliruqi.appspot.com/",
+    #proxy without any content rewrite, to fetch IP blocked sites
+    "PROXY_SERVER_SIMPLE" : "westchamberproxy.appspot.com",
+    "BLOCKED_DOMAINS_URI" : "https://raw.github.com/liruqi/kernet/stable/Scripts/timeout.txt",
     "REMOTE_DNS" : "168.95.1.1",
     "SKIP_LOCAL_RESOLV" : True,
     "REDIRECT_DOMAINS": {

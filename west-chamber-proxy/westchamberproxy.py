@@ -16,6 +16,10 @@ import re, socket, struct, threading, os, traceback, sys, select, urlparse, sign
 import config
 
 grules = []
+gBlockedDomains = {
+    "baidu.jp" : True,
+    "www.baidu.jp" : True,
+}
 
 gConfig = config.gConfig
 
@@ -205,10 +209,17 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 return
             # Remove http://[host]
             path = self.path[self.path.find(netloc) + len(netloc):]
+
+            if host in gBlockedDomains:
+                host = gConfig["PROXY_SERVER_SIMPLE"]
+                path = self.path[len(scm)+2:]
+                self.headers["Host"] = gConfig["PROXY_SERVER_SIMPLE"]
+                print "use simple web proxy for " + path
+
             connectHost = self.getip(host)
             
             self.lastHost = self.headers["Host"]
-
+            
             while True:
                 doInject = self.enableInjection(host, connectHost)
                 if self.remote is None or self.lastHost != self.headers["Host"]:
@@ -406,6 +417,16 @@ def start(fork):
         s.close()
     except:
         print "load ip-range config fail"
+
+    try:
+        global gBlockedDomains
+        s = urllib2.urlopen(gConfig["BLOCKED_DOMAINS_URI"])
+        for line in s.readlines():
+            line = line.strip()
+            gBlockedDomains[line] = True
+        s.close()
+    except:
+        print "load blocked domains failed"
 
     print "Loaded", len(grules), " dns rules."
     print "Set your browser's HTTP proxy to 127.0.0.1:%d"%(gConfig["LOCAL_PORT"])
