@@ -3,6 +3,7 @@
 * 不需要服务器的本地翻墙代理工具。
 * [项目维护地址](https://github.com/liruqi/west-chamber-season-3/tree/master/west-chamber-proxy)
 * [Follow up](https://plus.google.com/b/108661470402896863593/)
+* [捐赠本项目](https://me.alipay.com/liruqi)
 
 使用方法
 --------
@@ -52,7 +53,7 @@ IP封锁
 1. 如果国外网站IP被封锁，使用本工具可能无法访问。
 2. 如果国外网站被关键词过滤，且没有严格遵守 [rfc2616 - section 4.1](http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html)，本工具也不能生效（如baidu.jp）。
 
-已知的不可用站点列表：
+已知的不可用站点列表(在线代理可以继续浏览)：
 
 * baidu.jp
 * nicovideo.jp (tw.nicovideo.jp 可以打开网页，无法看视频)
@@ -67,6 +68,7 @@ IP封锁
 
 TODO
 ----
+* [ALL] 整理被blocked 的 IP列表，走网页代理
 * [ALL] merge accelerates from [ccp0101/dnschina](https://github.com/ccp0101/dnschina)
 * [Android] 实现系统HTTP 代理的设置，这样系统自带的浏览器也可以用。
 * [Android] 用 Java 重写代理逻辑，用户就不用下载依赖的 python 软件包。
