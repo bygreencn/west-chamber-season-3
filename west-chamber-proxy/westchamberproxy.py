@@ -19,6 +19,8 @@ grules = []
 gBlockedDomains = {
     "baidu.jp" : True,
     "www.baidu.jp" : True,
+    "www.nicovideo.jp": True,
+    "ext.nicovideo.jp": True,
 }
 
 gConfig = config.gConfig
@@ -249,7 +251,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 except:
                     raise
 
-                if doInject and (response.status == 400 or response.status == 405 or badStatusLine):
+                if doInject and (response.status == 400 or response.status == 405 or badStatusLine) and host != gConfig["PROXY_SERVER_SIMPLE"]:
                     self.remote.close()
                     self.remote = None
                     domainWhiteList.append(host)

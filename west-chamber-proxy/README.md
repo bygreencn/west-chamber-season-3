@@ -51,12 +51,7 @@ IP封锁
 可用性
 ------
 1. 如果国外网站IP被封锁，使用本工具可能无法访问。
-2. 如果国外网站被关键词过滤，且没有严格遵守 [rfc2616 - section 4.1](http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html)，本工具也不能生效（如baidu.jp）。
-
-已知的不可用站点列表(在线代理可以继续浏览)：
-
-* baidu.jp
-* nicovideo.jp (tw.nicovideo.jp 可以打开网页，无法看视频)
+2. 如果国外网站被关键词过滤，且没有严格遵守 [rfc2616 - section 4.1](http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html)，本工具可能不生效。
 
 问题反馈
 --------
