@@ -1,6 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 '''
     westchamberproxy by liruqi AT gmail.com
-    Last update: 2012/01/27
     Based on:
     PyGProxy helps you access Google resources quickly!!!
     Go through the G.F.W....
@@ -9,11 +11,21 @@
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
-from httplib import HTTPResponse
-import re, socket, struct, threading, os, traceback, sys, select, urlparse, signal, urllib, json, platform
+from httplib import HTTPResponse, BadStatusLine
+import re, socket, struct, threading, os, traceback, sys, select, urlparse, signal, urllib, urllib2, json, platform, time
+import config
 
 grules = []
-PROXY_SERVER = "http://opliruqi.appspot.com/"
+gBlockedDomains = {
+    "baidu.jp" : True,
+    "search.twitter.com" : True,
+    "www.baidu.jp" : True,
+    "www.nicovideo.jp": True,
+    "ext.nicovideo.jp": True,
+}
+
+gConfig = config.gConfig
+
 PID_FILE = '/tmp/python.pid'
 gipWhiteList = []
 domainWhiteList = [
@@ -29,17 +41,22 @@ domainWhiteList = [
     "qstatic.com",
     "serve.com",
     "qq.com",
+    "qqmail.com",
     "soso.com",
     "weibo.com",
     "youku.com",
     "tudou.com",
     "ft.net",
-    "ge.net"
+    "ge.net",
+    "phonenumber.com"
     ]
 
 class ThreadingHTTPServer(ThreadingMixIn, HTTPServer): pass
 class ProxyHandler(BaseHTTPRequestHandler):
     remote = None
+    dnsCache = {}
+    now = 0
+
     def enableInjection(self, host, ip):
         global gipWhiteList;
         print "check "+host + " " + ip
@@ -77,6 +94,16 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 print ("Rule resolve: " + host + " => " + r[0])
                 return r[0]
 
+        print "Resolving " + host
+        self.now = int( time.time() )
+        if host in self.dnsCache:
+            if self.now < self.dnsCache[host]["expire"]:
+                print "Cache: " + host + " => " + self.dnsCache[host]["ip"] + " / expire in %d (s)" %(self.dnsCache[host]["expire"] - self.now)
+                return self.dnsCache[host]["ip"]
+
+        if gConfig["SKIP_LOCAL_RESOLV"]:
+            return self.getRemoteResolve(host, gConfig["REMOTE_DNS"])
+
         try:
             ip = socket.gethostbyname(host)
             fakeIp = {
@@ -92,52 +119,118 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 0x9f1803ad : 1,
                 0x3b1803ad : 1,
             }
+            ChinaUnicom404 = {
+                "202.106.199.37" : 1,
+                "202.106.195.30" : 1,
+            }
             packedIp = socket.inet_aton(ip)
             if struct.unpack('!I', packedIp)[0] in fakeIp:
                 print ("Fake IP " + host + " => " + ip)
+            elif ip in ChinaUnicom404:
+                print ("ChinaUnicom404 " + host + " => " + ip + ", ignore");
             else:
                 print ("DNS system resolve: " + host + " => " + ip)
                 return ip
         except:
-            print "DNS system resolve Error"
+            print "DNS system resolve Error: " + host
             ip = ""
-            
+        return self.getRemoteResolve(host, gConfig["REMOTE_DNS"])
+
+    def getRemoteResolve(self, host, dnsserver):
+        print "remote resolve " + host + " by " + dnsserver
         import DNS
         reqObj = DNS.Request()
-        response = reqObj.req(name=host, qtype="A", protocol="tcp", server="168.95.1.1")
+        response = reqObj.req(name=host, qtype="A", protocol="tcp", server=dnsserver)
         #response.show()
+        #print "answers: " + str(response.answers)
         for a in response.answers:
             if a["name"] == host:
-                print ("DNS remote resolve: " + host + " => " + a["data"])
+                print ("DNS remote resolve: " + host + " => " + str(a))
                 if a['typename'] == 'CNAME':
                     return self.getip(a["data"])
+                self.dnsCache[host] = {"ip":a["data"], "expire":self.now + a["ttl"]}
                 return a["data"]
-
-        print ("DNS resolve failed: " + host)
+        print "authority: "+ str(response.authority)
+        for a in response.authority:
+            if a['typename'] != "NS":
+                continue
+            if type(a['data']) == type((1,2)):
+                return self.getRemoteResolve(host, a['data'][0])
+            else :
+                return self.getRemoteResolve(host, a['data'])
+        print ("DNS remote resolve failed: " + host)
         return host
-
+    
+    def netlog(self, path):
+        print "FEEDBACK_LOG: " + path
+        if "FEEDBACK_LOG_SERVER" in gConfig:
+            try:
+                urllib2.urlopen(gConfig["FEEDBACK_LOG_SERVER"] + path).close()
+            except:
+                pass
+        print "end FEEDBACK_LOG" 
+        
     def proxy(self):
         doInject = False
-        try:
-            print self.requestline
-            self.supportCrLfPrefix = True
-            port = 80
-            host = self.headers["Host"]
-            if host.find(":") != -1:
-                port = int(host.split(":")[1])
-                host = host.split(":")[0]
-            # Remove http://[host]
-            path = self.path[self.path.find(host) + len(host):]
-            connectHost = self.getip(host)
-            doInject = self.enableInjection(host, connectHost)
-            if self.remote is None or self.lastHost != self.headers["Host"]:
-                self.remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.remote.connect((connectHost, port))
-                if doInject: 
-                    self.remote.send("\r\n\r\n")
-            self.lastHost = self.headers["Host"]
+        print self.requestline
+        port = 80
+        host = self.headers["Host"]
+        if host.find(":") != -1:
+            port = int(host.split(":")[1])
+            host = host.split(":")[0]
+        errpath = ""
 
+        try:
+            redirectUrl = self.path
             while True:
+                (scm, netloc, path, params, query, _) = urlparse.urlparse(redirectUrl)
+
+                if (netloc not in gConfig["REDIRECT_DOMAINS"]):
+                    break
+                prefixes = gConfig["REDIRECT_DOMAINS"][netloc].split('|')
+                found = False
+                for prefix in prefixes:
+                    prefix = prefix + "="
+                    for param in query.split('&') :
+                        if param.find(prefix) == 0:
+                            print "redirect to " + urllib.unquote(param[len(prefix):])
+                            redirectUrl = urllib.unquote(param[len(prefix):])
+                            found = True
+                            continue 
+                if not found:
+                    break
+
+            if (host in gConfig["HSTS_DOMAINS"]):
+                redirectUrl = "https://" + self.path[7:]
+
+            #redirect 
+            if (redirectUrl != self.path):
+                status = "HTTP/1.1 302 Found"
+                self.wfile.write(status + "\r\n")
+                self.wfile.write("Location: " + redirectUrl + "\r\n")
+                self.connection.close()
+                return
+            # Remove http://[host]
+            path = self.path[self.path.find(netloc) + len(netloc):]
+
+            if host in gBlockedDomains:
+                host = gConfig["PROXY_SERVER_SIMPLE"]
+                path = self.path[len(scm)+2:]
+                self.headers["Host"] = gConfig["PROXY_SERVER_SIMPLE"]
+                print "use simple web proxy for " + path
+
+            connectHost = self.getip(host)
+            
+            self.lastHost = self.headers["Host"]
+            
+            while True:
+                doInject = self.enableInjection(host, connectHost)
+                if self.remote is None or self.lastHost != self.headers["Host"]:
+                    self.remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    print "connect to " + host + ":" + str(port)
+                    self.remote.connect((connectHost, port))
+                    if doInject: 
+                        self.remote.send("\r\n\r\n")
                 # Send requestline
                 self.remote.send(" ".join((self.command, path, self.request_version)) + "\r\n")
                 # Send headers
@@ -146,10 +239,24 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 if(self.command=='POST'):
                     self.remote.send(self.rfile.read(int(self.headers['Content-Length'])))
                 response = HTTPResponse(self.remote, method=self.command)
-                response.begin()
-                if response.status == 400 and self.supportCrLfPrefix == True:
-                    while response.read(8192): pass
-                    self.supportCrLfPrefix = False
+                badStatusLine = False
+                msg = "http405"
+                try :
+                    response.begin()
+                    print host + " response: %d"%(response.status)
+                    msg = "http%d"%(response.status)
+                except BadStatusLine:
+                    print host + " response: BadStatusLine"
+                    msg = "badStatusLine"
+                    badStatusLine = True
+                except:
+                    raise
+
+                if doInject and (response.status == 400 or response.status == 405 or badStatusLine) and host != gConfig["PROXY_SERVER_SIMPLE"]:
+                    self.remote.close()
+                    self.remote = None
+                    domainWhiteList.append(host)
+                    errpath = (msg + "/host/" + host)
                     continue
                 break
             # Reply to the browser
@@ -172,22 +279,36 @@ class ProxyHandler(BaseHTTPRequestHandler):
             exc_type, exc_value, exc_traceback = sys.exc_info()
             print "error in proxy: ", self.requestline
             print exc_type
-            print exc_value
+            print str(exc_value) + " " + host
+            errpath = "unkown/host/" + host 
+            if exc_type == socket.error:
+                code, msg = str(exc_value).split('] ')
+                code = code[1:].replace(" ", "")
+                errpath = code + "/host/" + host + "/?msg=" + urllib.quote(msg)
             traceback.print_tb(exc_traceback)
             (scm, netloc, path, params, query, _) = urlparse.urlparse(self.path)
-            if (scm.upper() != "HTTP"):
-                self.wfile.write("HTTP/1.1 500 Server Error " + scm.upper() + "\r\n")
-            elif (netloc == urlparse.urlparse(PROXY_SERVER)[1]):
-                self.wfile.write("HTTP/1.1 500 Server Error, Cannot connect to proxy " + "\r\n")
+            status = "HTTP/1.1 302 Found"
+            if (netloc != urlparse.urlparse( gConfig["PROXY_SERVER"] )[1]):
+                self.wfile.write(status + "\r\n")
+                redirectUrl = gConfig["PROXY_SERVER"] + self.path[7:]
+                if host in gConfig["HSTS_ON_EXCEPTION_DOMAINS"]:
+                    redirectUrl = "https://" + self.path[7:]
+
+                self.wfile.write("Location: " + redirectUrl + "\r\n")
             else:
-                if doInject:
-                    status = "HTTP/1.1 302 Found"
-                    self.wfile.write(status + "\r\n")
-                    self.wfile.write("Location: " + PROXY_SERVER + self.path[7:] + "\r\n")
+                status = "HTTP/1.1 302 Found"
+                if (scm.upper() != "HTTP"):
+                    msg = "schme-not-supported"
                 else:
-                    print ("Not redirect " + self.path)
-                    self.wfile.write("HTTP/1.1 500 Server Error Unkown Error\r\n")
+                    msg = "web-proxy-fail"
+                errpath = ("error/host/" + host + "/?msg=" + msg)
+                self.wfile.write(status + "\r\n")
+                self.wfile.write("Location: http://liruqi.info/post/18486575704/west-chamber-proxy#" + msg + "\r\n")
             self.connection.close()
+            print "client connection closed"
+
+        if errpath != "":
+            self.netlog(errpath)
     
     def do_GET(self):
         #some sites(e,g, weibo.com) are using comet (persistent HTTP connection) to implement server push
@@ -273,7 +394,7 @@ def start(fork):
     
     # Read Configuration
     try:
-        s = urllib.urlopen('http://liruqi.sinaapp.com/mirror.php?u=aHR0cDovL3NtYXJ0aG9zdHMuZ29vZ2xlY29kZS5jb20vc3ZuL3RydW5rL2hvc3Rz', proxies={})
+        s = urllib2.urlopen('http://liruqi.sinaapp.com/mirror.php?u=aHR0cDovL3NtYXJ0aG9zdHMuZ29vZ2xlY29kZS5jb20vc3ZuL3RydW5rL2hvc3Rz')
         for line in s.readlines():
             line = line.strip()
             line = line.split("#")[0]
@@ -293,19 +414,26 @@ def start(fork):
     
     try:
         global gipWhiteList;
-        s = urllib.urlopen('http://liruqi.sinaapp.com/exclude-ip.json', proxies={})
+        s = urllib2.urlopen('http://liruqi.sinaapp.com/exclude-ip.json')
         gipWhiteList = json.loads( s.read() )
         print "load %d ip range rules" % len(gipWhiteList);
         s.close()
     except:
         print "load ip-range config fail"
 
+    try:
+        global gBlockedDomains
+        s = urllib2.urlopen(gConfig["BLOCKED_DOMAINS_URI"])
+        for line in s.readlines():
+            line = line.strip()
+            gBlockedDomains[line] = True
+        s.close()
+    except:
+        print "load blocked domains failed"
+
     print "Loaded", len(grules), " dns rules."
-    localPort = 1998
-    #if (len(sys.argv) > 1):
-    #    localPort = int(sys.argv[1])
-    print "Set your browser's HTTP proxy to 127.0.0.1:%d"%(localPort)
-    server = ThreadingHTTPServer(("0.0.0.0", localPort), ProxyHandler)
+    print "Set your browser's HTTP proxy to 127.0.0.1:%d"%(gConfig["LOCAL_PORT"])
+    server = ThreadingHTTPServer(("0.0.0.0", gConfig["LOCAL_PORT"]), ProxyHandler)
     try: server.serve_forever()
     except KeyboardInterrupt: exit()
     
